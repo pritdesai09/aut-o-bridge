@@ -1,82 +1,123 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="fade-in">
-  <!-- Welcome Header -->
   <div class="glass rounded-3xl p-6 mb-8 flex items-center justify-between">
-    <div>
-      <h1 class="text-3xl font-black text-gray-800">Welcome back, {{ user.full_name.split()[0] }} 👋</h1>
-      <p class="text-gray-400 mt-1">Here's your family's care overview</p>
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
+        <i data-lucide="user-round" class="w-7 h-7 text-indigo-600"></i>
+      </div>
+      <div>
+        <h1 class="text-2xl font-black text-gray-800">Welcome back, {{ user.full_name.split()[0] }}</h1>
+        <p class="text-gray-400 text-sm">{{ user.email }}</p>
+      </div>
     </div>
-    <a href="/auth/child-profile" class="btn-primary px-5 py-3 rounded-2xl font-bold text-sm">+ Add Child</a>
+    <a href="/auth/child-profile" class="btn-primary px-5 py-3 rounded-2xl font-bold text-sm flex items-center gap-2">
+      <i data-lucide="plus" class="w-4 h-4"></i> Add Child
+    </a>
   </div>
 
   <!-- Quick Actions -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
     <a href="/diagnosis/questionnaire" class="glass rounded-2xl p-5 card-hover text-center block">
-      <div class="text-3xl mb-2">🔍</div>
+      <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-indigo-100 flex items-center justify-center">
+        <i data-lucide="scan-face" class="w-6 h-6 text-indigo-500"></i>
+      </div>
       <div class="font-black text-gray-700 text-sm">Start Screening</div>
     </a>
     <a href="/communication/board" class="glass rounded-2xl p-5 card-hover text-center block">
-      <div class="text-3xl mb-2">💬</div>
+      <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-orange-100 flex items-center justify-center">
+        <i data-lucide="layout-grid" class="w-6 h-6 text-orange-500"></i>
+      </div>
       <div class="font-black text-gray-700 text-sm">AAC Board</div>
     </a>
     <a href="/consultation/doctors" class="glass rounded-2xl p-5 card-hover text-center block">
-      <div class="text-3xl mb-2">👨‍⚕️</div>
+      <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-green-100 flex items-center justify-center">
+        <i data-lucide="stethoscope" class="w-6 h-6 text-green-500"></i>
+      </div>
       <div class="font-black text-gray-700 text-sm">Find Doctor</div>
     </a>
     <a href="/dashboard/access_control" class="glass rounded-2xl p-5 card-hover text-center block">
-      <div class="text-3xl mb-2">🔐</div>
+      <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-purple-100 flex items-center justify-center">
+        <i data-lucide="shield-check" class="w-6 h-6 text-purple-500"></i>
+      </div>
       <div class="font-black text-gray-700 text-sm">Access Control</div>
     </a>
   </div>
 
-  <!-- Children Profiles -->
-  <h2 class="text-xl font-black text-gray-700 mb-4">Children Profiles</h2>
-  {% if children %}
-  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-    {% for child in children %}
-    <div class="glass rounded-3xl p-6 card-hover">
-      <div class="flex items-center gap-4 mb-4">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center text-2xl">
-          {% if child.gender == 'female' %}👧{% else %}👦{% endif %}
+  <div class="grid md:grid-cols-2 gap-8">
+    <!-- Children -->
+    <div>
+      <h2 class="text-xl font-black text-gray-700 mb-4 flex items-center gap-2">
+        <i data-lucide="baby" class="w-5 h-5 text-indigo-500"></i> Children Profiles
+      </h2>
+      {% if children %}
+        {% for child in children %}
+        <div class="glass rounded-3xl p-5 card-hover mb-4">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+              <i data-lucide="{% if child.gender == 'female' %}user-round{% else %}user-round{% endif %}" class="w-7 h-7 text-indigo-500"></i>
+            </div>
+            <div>
+              <div class="font-black text-gray-800">{{ child.full_name }}</div>
+              <div class="text-xs text-gray-400 font-semibold flex items-center gap-1">
+                <i data-lucide="calendar" class="w-3 h-3"></i> DOB: {{ child.date_of_birth }}
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <a href="/diagnosis/questionnaire" class="btn-primary flex-1 py-2 rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1">
+              <i data-lucide="scan-face" class="w-3 h-3"></i> Screen
+            </a>
+            <a href="/consultation/doctors" class="btn-secondary flex-1 py-2 rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1">
+              <i data-lucide="stethoscope" class="w-3 h-3"></i> Consult
+            </a>
+          </div>
         </div>
-        <div>
-          <div class="font-black text-gray-800">{{ child.full_name }}</div>
-          <div class="text-xs text-gray-400 font-semibold">DOB: {{ child.date_of_birth }}</div>
-        </div>
+        {% endfor %}
+      {% else %}
+      <div class="glass rounded-3xl p-8 text-center">
+        <i data-lucide="baby" class="w-12 h-12 text-gray-300 mx-auto mb-3"></i>
+        <h3 class="font-black text-lg text-gray-600 mb-2">No Child Profile Yet</h3>
+        <p class="text-gray-400 text-sm mb-4">Add your child's profile to begin</p>
+        <a href="/auth/child-profile" class="btn-primary px-6 py-2.5 rounded-xl font-bold text-sm inline-flex items-center gap-2">
+          <i data-lucide="plus" class="w-4 h-4"></i> Add Child
+        </a>
       </div>
-      <div class="flex gap-2">
-        <a href="/diagnosis/questionnaire" class="btn-primary flex-1 py-2 rounded-xl text-xs font-bold text-center">Screen</a>
-        <a href="/consultation/doctors" class="btn-secondary flex-1 py-2 rounded-xl text-xs font-bold text-center">Consult</a>
-      </div>
+      {% endif %}
     </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="glass rounded-3xl p-12 text-center mb-8">
-    <div class="text-6xl mb-4">👶</div>
-    <h3 class="font-black text-xl text-gray-700 mb-2">No Child Profile Yet</h3>
-    <p class="text-gray-400 mb-6">Add your child's profile to begin the care journey</p>
-    <a href="/auth/child-profile" class="btn-primary px-8 py-3 rounded-2xl font-bold inline-block">Add Child Profile</a>
-  </div>
-  {% endif %}
 
-  <!-- Info Cards -->
-  <div class="grid md:grid-cols-3 gap-6">
-    <div class="glass rounded-3xl p-6 border-l-4 border-indigo-400">
-      <div class="text-2xl mb-2">🧩</div>
-      <h3 class="font-black text-gray-800 mb-1">About Autism</h3>
-      <p class="text-gray-400 text-sm">Early intervention leads to significantly better outcomes. Screening before age 3 is most effective.</p>
-    </div>
-    <div class="glass rounded-3xl p-6 border-l-4 border-orange-400">
-      <div class="text-2xl mb-2">💡</div>
-      <h3 class="font-black text-gray-800 mb-1">Communication Tip</h3>
-      <p class="text-gray-400 text-sm">Use the AAC board daily. Consistent visual communication builds confidence in non-verbal children.</p>
-    </div>
-    <div class="glass rounded-3xl p-6 border-l-4 border-green-400">
-      <div class="text-2xl mb-2">📞</div>
-      <h3 class="font-black text-gray-800 mb-1">Need Help?</h3>
-      <p class="text-gray-400 text-sm">Our specialists are available for online consultations 7 days a week in your preferred language.</p>
+    <!-- Appointments -->
+    <div>
+      <h2 class="text-xl font-black text-gray-700 mb-4 flex items-center gap-2">
+        <i data-lucide="calendar-clock" class="w-5 h-5 text-green-500"></i> Appointments
+      </h2>
+      {% if appointments %}
+        {% for appt in appointments %}
+        <div class="glass rounded-2xl p-4 mb-3 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="{% if appt.mode == 'Online' %}video{% else %}building-2{% endif %}" class="w-5 h-5 text-green-600"></i>
+          </div>
+          <div class="flex-1">
+            <div class="font-black text-gray-800 text-sm">Doctor #{{ appt.doctor_id }}</div>
+            <div class="text-xs text-gray-400 flex items-center gap-1">
+              <i data-lucide="clock" class="w-3 h-3"></i> {{ appt.appointment_date }} at {{ appt.appointment_time }}
+            </div>
+          </div>
+          <span class="text-xs font-bold px-2 py-1 rounded-lg {% if appt.status == 'upcoming' %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-500{% endif %}">
+            {{ appt.status|title }}
+          </span>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="glass rounded-3xl p-8 text-center">
+        <i data-lucide="calendar-x" class="w-12 h-12 text-gray-300 mx-auto mb-3"></i>
+        <h3 class="font-black text-lg text-gray-600 mb-2">No Appointments</h3>
+        <p class="text-gray-400 text-sm mb-4">Book a consultation with a specialist</p>
+        <a href="/consultation/doctors" class="btn-primary px-6 py-2.5 rounded-xl font-bold text-sm inline-flex items-center gap-2">
+          <i data-lucide="stethoscope" class="w-4 h-4"></i> Find Doctor
+        </a>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>

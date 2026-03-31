@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Request, Form, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from passlib.context import CryptContext
 from jose import jwt
@@ -30,27 +29,41 @@ def decode_token(token: str):
     except:
         return None
 
-async def get_current_user(request: Request, db: AsyncSession):
+async def get_current_user(request: Request):
+    from app import AsyncSessionLocal
     token = get_token(request)
     if not token:
         return None
     payload = decode_token(token)
     if not payload:
         return None
-    result = await db.execute(select(User).where(User.email == payload.get("sub")))
-    return result.scalar_one_or_none()
+    async with AsyncSessionLocal() as db:
+        result = await db.execute(select(User).where(User.email == payload.get("sub")))
+        return result.scalar_one_or_none()
+
+def require_auth(request: Request):
+    token = get_token(request)
+    if not token or not decode_token(token):
+        return False
+    return True
 
 @router.get("/register", response_class=HTMLResponse)
 async def register_page(request: Request):
-    return templates.TemplateResponse(request, "auth/register.html")
+    if require_auth(request):
+        return RedirectResponse("/dashboard/home", status_code=302)
+    return templates.TemplateResponse(request, "auth/register.html", {})
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
-    return templates.TemplateResponse(request, "auth/login.html")
+    if require_auth(request):
+        return RedirectResponse("/dashboard/home", status_code=302)
+    return templates.TemplateResponse(request, "auth/login.html", {})
 
 @router.get("/child-profile", response_class=HTMLResponse)
 async def child_profile_page(request: Request):
-    return templates.TemplateResponse(request, "auth/child_profile.html")
+    if not require_auth(request):
+        return RedirectResponse("/auth/login", status_code=302)
+    return templates.TemplateResponse(request, "auth/child_profile.html", {})
 
 @router.post("/register")
 async def register(
@@ -62,23 +75,29 @@ async def register(
     language: str = Form("en"),
 ):
     from app import AsyncSessionLocal
-    async with AsyncSessionLocal() as db:
-        result = await db.execute(select(User).where(User.email == email))
-        if result.scalar_one_or_none():
-            return templates.TemplateResponse(request, "auth/register.html", {
-                "error": "Email already registered."
-            })
-        user = User(
-            full_name=full_name, email=email, phone=phone,
-            hashed_password=pwd_context.hash(password), language=language
-        )
-        db.add(user)
-        await db.commit()
-        token = create_token({"sub": email})
-        response = RedirectResponse("/auth/child-profile", status_code=302)
-        response.set_cookie("access_token", token, httponly=True)
-        response.set_cookie("lang", language)
-        return response
+    try:
+        async with AsyncSessionLocal() as db:
+            result = await db.execute(select(User).where(User.email == email))
+            if result.scalar_one_or_none():
+                return templates.TemplateResponse(request, "auth/register.html", {
+                    "error": "Email already registered."
+                })
+            user = User(
+                full_name=full_name, email=email, phone=phone,
+                hashed_password=pwd_context.hash(password), language=language
+            )
+            db.add(user)
+            await db.commit()
+            await db.refresh(user)
+            token = create_token({"sub": email})
+            response = RedirectResponse("/auth/child-profile", status_code=302)
+            response.set_cookie("access_token", token, httponly=True, samesite="lax")
+            response.set_cookie("lang", language, samesite="lax")
+            return response
+    except Exception as e:
+        return templates.TemplateResponse(request, "auth/register.html", {
+            "error": f"Registration failed: {str(e)}"
+        })
 
 @router.post("/login")
 async def login(
@@ -87,18 +106,23 @@ async def login(
     password: str = Form(...),
 ):
     from app import AsyncSessionLocal
-    async with AsyncSessionLocal() as db:
-        result = await db.execute(select(User).where(User.email == email))
-        user = result.scalar_one_or_none()
-        if not user or not pwd_context.verify(password, user.hashed_password):
-            return templates.TemplateResponse(request, "auth/login.html", {
-                "error": "Invalid email or password."
-            })
-        token = create_token({"sub": email})
-        response = RedirectResponse("/dashboard/home", status_code=302)
-        response.set_cookie("access_token", token, httponly=True)
-        response.set_cookie("lang", user.language)
-        return response
+    try:
+        async with AsyncSessionLocal() as db:
+            result = await db.execute(select(User).where(User.email == email))
+            user = result.scalar_one_or_none()
+            if not user or not pwd_context.verify(password, user.hashed_password):
+                return templates.TemplateResponse(request, "auth/login.html", {
+                    "error": "Invalid email or password."
+                })
+            token = create_token({"sub": email})
+            response = RedirectResponse("/dashboard/home", status_code=302)
+            response.set_cookie("access_token", token, httponly=True, samesite="lax")
+            response.set_cookie("lang", user.language, samesite="lax")
+            return response
+    except Exception as e:
+        return templates.TemplateResponse(request, "auth/login.html", {
+            "error": f"Login failed: {str(e)}"
+        })
 
 @router.post("/child-profile")
 async def create_child(
@@ -109,26 +133,32 @@ async def create_child(
     photo: UploadFile = File(None),
 ):
     from app import AsyncSessionLocal
-    async with AsyncSessionLocal() as db:
-        token = get_token(request)
-        payload = decode_token(token)
-        if not payload:
-            return RedirectResponse("/auth/login", status_code=302)
-        result = await db.execute(select(User).where(User.email == payload.get("sub")))
-        user = result.scalar_one_or_none()
-        photo_path = None
-        if photo and photo.filename:
-            os.makedirs("static/uploads/photos", exist_ok=True)
-            photo_path = f"static/uploads/photos/{user.id}_{photo.filename}"
-            with open(photo_path, "wb") as f:
-                shutil.copyfileobj(photo.file, f)
-        child = Child(
-            parent_id=user.id, full_name=full_name,
-            date_of_birth=date_of_birth, gender=gender, photo_path=photo_path
-        )
-        db.add(child)
-        await db.commit()
-        return RedirectResponse("/dashboard/home", status_code=302)
+    token = get_token(request)
+    payload = decode_token(token)
+    if not payload:
+        return RedirectResponse("/auth/login", status_code=302)
+    try:
+        async with AsyncSessionLocal() as db:
+            result = await db.execute(select(User).where(User.email == payload.get("sub")))
+            user = result.scalar_one_or_none()
+            if not user:
+                return RedirectResponse("/auth/login", status_code=302)
+            photo_path = None
+            if photo and photo.filename:
+                photo_path = f"static/uploads/photos/{user.id}_{photo.filename}"
+                with open(photo_path, "wb") as f:
+                    shutil.copyfileobj(photo.file, f)
+            child = Child(
+                parent_id=user.id, full_name=full_name,
+                date_of_birth=date_of_birth, gender=gender, photo_path=photo_path
+            )
+            db.add(child)
+            await db.commit()
+            return RedirectResponse("/dashboard/home", status_code=302)
+    except Exception as e:
+        return templates.TemplateResponse(request, "auth/child_profile.html", {
+            "error": f"Failed to save: {str(e)}"
+        })
 
 @router.get("/logout")
 async def logout():

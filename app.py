@@ -8,25 +8,22 @@ import os
 
 from config import settings
 from models import Base
-from routes import auth, diagnosis, consultation, communication, dashboard
 
 app = FastAPI(title="Aut-o-Bridge", version="1.0.0")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-engine = create_async_engine(settings.DATABASE_URL, echo=False)
+engine = create_async_engine(settings.DATABASE_URL, echo=True)
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        yield session
 
 @app.on_event("startup")
 async def startup():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    os.makedirs("static/uploads", exist_ok=True)
+    os.makedirs("static/uploads/photos", exist_ok=True)
+
+from routes import auth, diagnosis, consultation, communication, dashboard
 
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(diagnosis.router, prefix="/diagnosis", tags=["Diagnosis"])

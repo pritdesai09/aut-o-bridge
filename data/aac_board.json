@@ -1,0 +1,88 @@
+{
+  "categories": [
+    {
+      "id": "greetings", "icon": "hand-wave",
+      "label": {"en": "Greetings", "hi": "अभिवादन", "mr": "शुभेच्छा"},
+      "tiles": [
+        {"id": 1, "icon": "👋", "label": {"en": "Hello", "hi": "नमस्ते", "mr": "नमस्कार"}},
+        {"id": 2, "icon": "😊", "label": {"en": "Good Morning", "hi": "शुभ प्रभात", "mr": "शुभ सकाळ"}},
+        {"id": 3, "icon": "🌙", "label": {"en": "Good Night", "hi": "शुभ रात्रि", "mr": "शुभ रात्र"}},
+        {"id": 4, "icon": "👍", "label": {"en": "Yes", "hi": "हाँ", "mr": "हो"}},
+        {"id": 5, "icon": "👎", "label": {"en": "No", "hi": "नहीं", "mr": "नाही"}},
+        {"id": 6, "icon": "🙏", "label": {"en": "Thank You", "hi": "धन्यवाद", "mr": "धन्यवाद"}},
+        {"id": 7, "icon": "😔", "label": {"en": "Sorry", "hi": "माफ़ करना", "mr": "माफ करा"}},
+        {"id": 8, "icon": "🤗", "label": {"en": "Hug", "hi": "गले लगाओ", "mr": "मिठी"}}
+      ]
+    },
+    {
+      "id": "feelings", "icon": "heart",
+      "label": {"en": "Feelings", "hi": "भावनाएं", "mr": "भावना"},
+      "tiles": [
+        {"id": 9, "icon": "😊", "label": {"en": "Happy", "hi": "खुश", "mr": "आनंदी"}},
+        {"id": 10, "icon": "😢", "label": {"en": "Sad", "hi": "उदास", "mr": "दुःखी"}},
+        {"id": 11, "icon": "😠", "label": {"en": "Angry", "hi": "गुस्सा", "mr": "रागावलेला"}},
+        {"id": 12, "icon": "😨", "label": {"en": "Scared", "hi": "डरा हुआ", "mr": "घाबरलेला"}},
+        {"id": 13, "icon": "😴", "label": {"en": "Tired", "hi": "थका हुआ", "mr": "थकलेला"}},
+        {"id": 14, "icon": "🤒", "label": {"en": "Sick", "hi": "बीमार", "mr": "आजारी"}},
+        {"id": 15, "icon": "😕", "label": {"en": "Confused", "hi": "भ्रमित", "mr": "गोंधळलेला"}},
+        {"id": 16, "icon": "🥰", "label": {"en": "Love", "hi": "प्यार", "mr": "प्रेम"}}
+      ]
+    },
+    {
+      "id": "needs", "icon": "star",
+      "label": {"en": "I Need", "hi": "मुझे चाहिए", "mr": "मला हवे"},
+      "tiles": [
+        {"id": 17, "icon": "🍽️", "label": {"en": "Food", "hi": "खाना", "mr": "जेवण"}},
+        {"id": 18, "icon": "💧", "label": {"en": "Water", "hi": "पानी", "mr": "पाणी"}},
+        {"id": 19, "icon": "🚽", "label": {"en": "Toilet", "hi": "शौचालय", "mr": "शौचालय"}},
+        {"id": 20, "icon": "😴", "label": {"en": "Sleep", "hi": "नींद", "mr": "झोप"}},
+        {"id": 21, "icon": "🤗", "label": {"en": "Help", "hi": "मदद", "mr": "मदत"}},
+        {"id": 22, "icon": "🛑", "label": {"en": "Stop", "hi": "रुको", "mr": "थांबा"}},
+        {"id": 23, "icon": "▶️", "label": {"en": "More", "hi": "और", "mr": "अजून"}},
+        {"id": 24, "icon": "🔇", "label": {"en": "Quiet", "hi": "शांत", "mr": "शांत"}}
+      ]
+    },
+    {
+      "id": "food", "icon": "utensils",
+      "label": {"en": "Food", "hi": "खाना", "mr": "अन्न"},
+      "tiles": [
+        {"id": 25, "icon": "🍎", "label": {"en": "Fruit", "hi": "फल", "mr": "फळ"}},
+        {"id": 26, "icon": "🥛", "label": {"en": "Milk", "hi": "दूध", "mr": "दूध"}},
+        {"id": 27, "icon": "🍞", "label": {"en": "Bread", "hi": "रोटी", "mr": "भाकरी"}},
+        {"id": 28, "icon": "🍚", "label": {"en": "Rice", "hi": "चावल", "mr": "भात"}},
+        {"id": 29, "icon": "🍪", "label": {"en": "Biscuit", "hi": "बिस्किट", "mr": "बिस्किट"}},
+        {"id": 30, "icon": "🧃", "label": {"en": "Juice", "hi": "जूस", "mr": "रस"}},
+        {"id": 31, "icon": "🍌", "label": {"en": "Banana", "hi": "केला", "mr": "केळ"}},
+        {"id": 32, "icon": "🍫", "label": {"en": "Chocolate", "hi": "चॉकलेट", "mr": "चॉकलेट"}}
+      ]
+    },
+    {
+      "id": "places", "icon": "map-pin",
+      "label": {"en": "Places", "hi": "जगह", "mr": "ठिकाणे"},
+      "tiles": [
+        {"id": 33, "icon": "🏠", "label": {"en": "Home", "hi": "घर", "mr": "घर"}},
+        {"id": 34, "icon": "🏫", "label": {"en": "School", "hi": "स्कूल", "mr": "शाळा"}},
+        {"id": 35, "icon": "🏥", "label": {"en": "Hospital", "hi": "अस्पताल", "mr": "रुग्णालय"}},
+        {"id": 36, "icon": "🛒", "label": {"en": "Market", "hi": "बाज़ार", "mr": "बाजार"}},
+        {"id": 37, "icon": "🌳", "label": {"en": "Park", "hi": "पार्क", "mr": "उद्यान"}},
+        {"id": 38, "icon": "⛪", "label": {"en": "Temple", "hi": "मंदिर", "mr": "मंदिर"}},
+        {"id": 39, "icon": "🚗", "label": {"en": "Car", "hi": "गाड़ी", "mr": "गाडी"}},
+        {"id": 40, "icon": "🚌", "label": {"en": "Bus", "hi": "बस", "mr": "बस"}}
+      ]
+    },
+    {
+      "id": "people", "icon": "users",
+      "label": {"en": "People", "hi": "लोग", "mr": "लोक"},
+      "tiles": [
+        {"id": 41, "icon": "👩", "label": {"en": "Mama", "hi": "माँ", "mr": "आई"}},
+        {"id": 42, "icon": "👨", "label": {"en": "Papa", "hi": "पापा", "mr": "बाबा"}},
+        {"id": 43, "icon": "👴", "label": {"en": "Grandpa", "hi": "दादा", "mr": "आजोबा"}},
+        {"id": 44, "icon": "👵", "label": {"en": "Grandma", "hi": "दादी", "mr": "आजी"}},
+        {"id": 45, "icon": "👦", "label": {"en": "Brother", "hi": "भाई", "mr": "भाऊ"}},
+        {"id": 46, "icon": "👧", "label": {"en": "Sister", "hi": "बहन", "mr": "बहीण"}},
+        {"id": 47, "icon": "👨‍⚕️", "label": {"en": "Doctor", "hi": "डॉक्टर", "mr": "डॉक्टर"}},
+        {"id": 48, "icon": "👩‍🏫", "label": {"en": "Teacher", "hi": "शिक्षक", "mr": "शिक्षक"}}
+      ]
+    }
+  ]
+}
