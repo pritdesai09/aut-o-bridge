@@ -1,0 +1,44 @@
+{
+  "en": [
+    {"id": 1, "q": "Does your child make eye contact during conversation?", "category": "social"},
+    {"id": 2, "q": "Does your child respond to their name being called?", "category": "social"},
+    {"id": 3, "q": "Does your child point to objects to show interest?", "category": "communication"},
+    {"id": 4, "q": "Does your child engage in pretend play with toys?", "category": "play"},
+    {"id": 5, "q": "Does your child repeat words or phrases (echolalia)?", "category": "communication"},
+    {"id": 6, "q": "Does your child show interest in other children?", "category": "social"},
+    {"id": 7, "q": "Does your child have repetitive body movements (rocking, hand-flapping)?", "category": "behavior"},
+    {"id": 8, "q": "Does your child insist on sameness or strict routines?", "category": "behavior"},
+    {"id": 9, "q": "Does your child have unusual reactions to sounds, textures or lights?", "category": "sensory"},
+    {"id": 10, "q": "Does your child have difficulty with transitions or changes?", "category": "behavior"},
+    {"id": 11, "q": "Does your child use gestures like waving or nodding?", "category": "communication"},
+    {"id": 12, "q": "Does your child show empathy or understand others' emotions?", "category": "social"}
+  ],
+  "hi": [
+    {"id": 1, "q": "क्या आपका बच्चा बातचीत के दौरान आंखों से संपर्क बनाता है?", "category": "social"},
+    {"id": 2, "q": "क्या आपका बच्चा अपना नाम पुकारे जाने पर प्रतिक्रिया देता है?", "category": "social"},
+    {"id": 3, "q": "क्या आपका बच्चा रुचि दिखाने के लिए वस्तुओं की ओर इशारा करता है?", "category": "communication"},
+    {"id": 4, "q": "क्या आपका बच्चा खिलौनों के साथ काल्पनिक खेल खेलता है?", "category": "play"},
+    {"id": 5, "q": "क्या आपका बच्चा शब्दों या वाक्यांशों को दोहराता है?", "category": "communication"},
+    {"id": 6, "q": "क्या आपका बच्चा अन्य बच्चों में रुचि दिखाता है?", "category": "social"},
+    {"id": 7, "q": "क्या आपके बच्चे में दोहराव वाली शारीरिक हरकतें हैं?", "category": "behavior"},
+    {"id": 8, "q": "क्या आपका बच्चा एकरूपता या दिनचर्या पर जोर देता है?", "category": "behavior"},
+    {"id": 9, "q": "क्या आपके बच्चे की आवाज़, बनावट या रोशनी पर असामान्य प्रतिक्रियाएं हैं?", "category": "sensory"},
+    {"id": 10, "q": "क्या आपके बच्चे को बदलावों के साथ कठिनाई होती है?", "category": "behavior"},
+    {"id": 11, "q": "क्या आपका बच्चा हाथ हिलाने या सिर हिलाने जैसे इशारों का उपयोग करता है?", "category": "communication"},
+    {"id": 12, "q": "क्या आपका बच्चा दूसरों की भावनाओं को समझता है?", "category": "social"}
+  ],
+  "mr": [
+    {"id": 1, "q": "तुमचे मूल संभाषणात डोळ्यांचा संपर्क करते का?", "category": "social"},
+    {"id": 2, "q": "तुमचे मूल त्यांचे नाव हाक मारल्यावर प्रतिसाद देते का?", "category": "social"},
+    {"id": 3, "q": "तुमचे मूल रस दाखवण्यासाठी वस्तूंकडे बोट दाखवते का?", "category": "communication"},
+    {"id": 4, "q": "तुमचे मूल खेळण्यांसोबत काल्पनिक खेळ खेळते का?", "category": "play"},
+    {"id": 5, "q": "तुमचे मूल शब्द किंवा वाक्ये पुनरावृत्ती करते का?", "category": "communication"},
+    {"id": 6, "q": "तुमचे मूल इतर मुलांमध्ये रस दाखवते का?", "category": "social"},
+    {"id": 7, "q": "तुमच्या मुलामध्ये पुनरावृत्ती शारीरिक हालचाली आहेत का?", "category": "behavior"},
+    {"id": 8, "q": "तुमचे मूल एकसारखेपणा किंवा दिनचर्यावर आग्रह करते का?", "category": "behavior"},
+    {"id": 9, "q": "तुमच्या मुलाची आवाज, पोत किंवा प्रकाशावर असामान्य प्रतिक्रिया आहे का?", "category": "sensory"},
+    {"id": 10, "q": "तुमच्या मुलाला बदलांशी जुळवून घेण्यात अडचण आहे का?", "category": "behavior"},
+    {"id": 11, "q": "तुमचे मूल हात हलवणे किंवा मान डोलावणे यासारखे हावभाव वापरते का?", "category": "communication"},
+    {"id": 12, "q": "तुमचे मूल इतरांच्या भावना समजते का?", "category": "social"}
+  ]
+}

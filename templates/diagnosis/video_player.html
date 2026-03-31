@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto fade-in">
+
+  <div class="glass rounded-3xl p-6 mb-6 text-center">
+    <div class="text-4xl mb-2">🎬</div>
+    <h1 class="text-3xl font-black text-gray-800">Emotion Response Assessment</h1>
+    <p class="text-gray-400 mt-2">Your child will watch a short video. We'll gently observe their facial responses.</p>
+    <div class="flex justify-center gap-3 mt-4">
+      <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full">Step 2 of 4</span>
+      <span class="bg-gray-100 text-gray-500 text-xs font-bold px-3 py-1 rounded-full">Age group: {{ age_group }}</span>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div id="instructions" class="glass rounded-3xl p-8 mb-6">
+    <h2 class="text-xl font-black text-gray-800 mb-4">Before we begin:</h2>
+    <div class="space-y-3 mb-6">
+      <div class="flex items-center gap-3 text-gray-600">
+        <div class="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 font-black text-sm">1</div>
+        <span class="font-semibold">Sit your child comfortably in front of the screen</span>
+      </div>
+      <div class="flex items-center gap-3 text-gray-600">
+        <div class="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 font-black text-sm">2</div>
+        <span class="font-semibold">Make sure the room is well-lit</span>
+      </div>
+      <div class="flex items-center gap-3 text-gray-600">
+        <div class="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 font-black text-sm">3</div>
+        <span class="font-semibold">Allow camera access when prompted</span>
+      </div>
+      <div class="flex items-center gap-3 text-gray-600">
+        <div class="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 font-black text-sm">4</div>
+        <span class="font-semibold">Let your child watch naturally — do not prompt reactions</span>
+      </div>
+    </div>
+    <button onclick="startSetup()" class="btn-primary w-full py-4 rounded-2xl font-black text-lg">
+      I'm Ready — Enable Camera 📷
+    </button>
+  </div>
+
+  <!-- Camera + Video -->
+  <div id="assessment" class="hidden">
+    <div class="grid md:grid-cols-2 gap-6 mb-6">
+      <!-- Video stimulus -->
+      <div class="glass rounded-3xl p-4">
+        <div class="text-sm font-bold text-gray-500 mb-2 text-center">📺 Stimulus Video</div>
+        <div id="videoContainer" class="rounded-2xl overflow-hidden bg-gray-900 aspect-video flex items-center justify-center">
+          <!-- Using YouTube embed for age-appropriate content -->
+          {% if age_group == "2-4" %}
+          <iframe id="stimulusVideo" width="100%" height="100%"
+            src="https://www.youtube.com/embed/sCNrK-n68CM?autoplay=0&controls=0&rel=0"
+            class="rounded-2xl" allowfullscreen></iframe>
+          {% elif age_group == "5-8" %}
+          <iframe id="stimulusVideo" width="100%" height="100%"
+            src="https://www.youtube.com/embed/L0MK7qz13bU?autoplay=0&controls=0&rel=0"
+            class="rounded-2xl" allowfullscreen></iframe>
+          {% else %}
+          <iframe id="stimulusVideo" width="100%" height="100%"
+            src="https://www.youtube.com/embed/ApXoWvfEYVU?autoplay=0&controls=0&rel=0"
+            class="rounded-2xl" allowfullscreen></iframe>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Camera feed -->
+      <div class="glass rounded-3xl p-4">
+        <div class="text-sm font-bold text-gray-500 mb-2 text-center">📷 Child's Camera</div>
+        <div class="rounded-2xl overflow-hidden bg-gray-900 aspect-video relative">
+          <video id="cameraFeed" autoplay muted playsinline class="w-full h-full object-cover rounded-2xl"></video>
+          <div id="recordingIndicator" class="hidden absolute top-3 right-3 flex items-center gap-1 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+            <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div> REC
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="glass rounded-3xl p-6 text-center">
+      <div id="statusMsg" class="text-gray-500 font-semibold mb-4">Camera ready. Press Start when your child is in position.</div>
+      <div class="flex justify-center gap-4">
+        <button id="startBtn" onclick="startRecording()" class="btn-primary px-8 py-3 rounded-2xl font-black">
+          ▶ Start Assessment
+        </button>
+        <button id="stopBtn" onclick="stopRecording()" class="hidden btn-secondary px-8 py-3 rounded-2xl font-black">
+          ⏹ Done
+        </button>
+      </div>
+      <div id="timer" class="hidden mt-4">
+        <div class="text-4xl font-black text-indigo-600" id="timerDisplay">0:00</div>
+        <div class="text-xs text-gray-400 mt-1">Recording in progress</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Progress -->
+  <div id="uploadSection" class="hidden glass rounded-3xl p-8 text-center">
+    <div class="text-5xl mb-4">⬆️</div>
+    <h2 class="text-xl font-black text-gray-800 mb-2">Uploading Recording...</h2>
+    <div class="w-full bg-gray-100 rounded-full h-3 mt-4">
+      <div id="uploadBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-300" style="width:0%"></div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let mediaRecorder, stream, chunks = [], timerInterval, seconds = 0;
+
+async function startSetup() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    document.getElementById('cameraFeed').srcObject = stream;
+    document.getElementById('instructions').classList.add('hidden');
+    document.getElementById('assessment').classList.remove('hidden');
+  } catch(e) {
+    alert('Camera access denied. Please allow camera access and try again.');
+  }
+}
+
+function startRecording() {
+  chunks = [];
+  mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+  mediaRecorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
+  mediaRecorder.onstop = uploadVideo;
+  mediaRecorder.start(1000);
+
+  document.getElementById('startBtn').classList.add('hidden');
+  document.getElementById('stopBtn').classList.remove('hidden');
+  document.getElementById('recordingIndicator').classList.remove('hidden');
+  document.getElementById('timer').classList.remove('hidden');
+  document.getElementById('statusMsg').textContent = 'Recording... Let your child watch the video naturally.';
+
+  seconds = 0;
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = Math.floor(seconds/60);
+    const s = seconds % 60;
+    document.getElementById('timerDisplay').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    if(seconds >= 120) stopRecording(); // Auto-stop at 2 mins
+  }, 1000);
+}
+
+function stopRecording() {
+  if(mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+    clearInterval(timerInterval);
+    if(stream) stream.getTracks().forEach(t => t.stop());
+  }
+  document.getElementById('assessment').classList.add('hidden');
+  document.getElementById('uploadSection').classList.remove('hidden');
+}
+
+async function uploadVideo() {
+  const blob = new Blob(chunks, { type: 'video/webm' });
+  const formData = new FormData();
+  formData.append('video', blob, 'recording.webm');
+
+  // Fake upload progress
+  let progress = 0;
+  const progressInterval = setInterval(() => {
+    progress = Math.min(progress + 5, 90);
+    document.getElementById('uploadBar').style.width = progress + '%';
+  }, 200);
+
+  try {
+    const res = await fetch('/diagnosis/analyze-video', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    clearInterval(progressInterval);
+    document.getElementById('uploadBar').style.width = '100%';
+    setTimeout(() => {
+      window.location.href = `/diagnosis/processing?job_id=${data.job_id}`;
+    }, 500);
+  } catch(e) {
+    clearInterval(progressInterval);
+    // On error, go directly to report with questionnaire-only data
+    window.location.href = '/diagnosis/report?job_id=fallback';
+  }
+}
+</script>
+{% endblock %}

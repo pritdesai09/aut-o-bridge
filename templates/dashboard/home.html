@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="fade-in">
+  <!-- Welcome Header -->
+  <div class="glass rounded-3xl p-6 mb-8 flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-black text-gray-800">Welcome back, {{ user.full_name.split()[0] }} 👋</h1>
+      <p class="text-gray-400 mt-1">Here's your family's care overview</p>
+    </div>
+    <a href="/auth/child-profile" class="btn-primary px-5 py-3 rounded-2xl font-bold text-sm">+ Add Child</a>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <a href="/diagnosis/questionnaire" class="glass rounded-2xl p-5 card-hover text-center block">
+      <div class="text-3xl mb-2">🔍</div>
+      <div class="font-black text-gray-700 text-sm">Start Screening</div>
+    </a>
+    <a href="/communication/board" class="glass rounded-2xl p-5 card-hover text-center block">
+      <div class="text-3xl mb-2">💬</div>
+      <div class="font-black text-gray-700 text-sm">AAC Board</div>
+    </a>
+    <a href="/consultation/doctors" class="glass rounded-2xl p-5 card-hover text-center block">
+      <div class="text-3xl mb-2">👨‍⚕️</div>
+      <div class="font-black text-gray-700 text-sm">Find Doctor</div>
+    </a>
+    <a href="/dashboard/access_control" class="glass rounded-2xl p-5 card-hover text-center block">
+      <div class="text-3xl mb-2">🔐</div>
+      <div class="font-black text-gray-700 text-sm">Access Control</div>
+    </a>
+  </div>
+
+  <!-- Children Profiles -->
+  <h2 class="text-xl font-black text-gray-700 mb-4">Children Profiles</h2>
+  {% if children %}
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    {% for child in children %}
+    <div class="glass rounded-3xl p-6 card-hover">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center text-2xl">
+          {% if child.gender == 'female' %}👧{% else %}👦{% endif %}
+        </div>
+        <div>
+          <div class="font-black text-gray-800">{{ child.full_name }}</div>
+          <div class="text-xs text-gray-400 font-semibold">DOB: {{ child.date_of_birth }}</div>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <a href="/diagnosis/questionnaire" class="btn-primary flex-1 py-2 rounded-xl text-xs font-bold text-center">Screen</a>
+        <a href="/consultation/doctors" class="btn-secondary flex-1 py-2 rounded-xl text-xs font-bold text-center">Consult</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="glass rounded-3xl p-12 text-center mb-8">
+    <div class="text-6xl mb-4">👶</div>
+    <h3 class="font-black text-xl text-gray-700 mb-2">No Child Profile Yet</h3>
+    <p class="text-gray-400 mb-6">Add your child's profile to begin the care journey</p>
+    <a href="/auth/child-profile" class="btn-primary px-8 py-3 rounded-2xl font-bold inline-block">Add Child Profile</a>
+  </div>
+  {% endif %}
+
+  <!-- Info Cards -->
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="glass rounded-3xl p-6 border-l-4 border-indigo-400">
+      <div class="text-2xl mb-2">🧩</div>
+      <h3 class="font-black text-gray-800 mb-1">About Autism</h3>
+      <p class="text-gray-400 text-sm">Early intervention leads to significantly better outcomes. Screening before age 3 is most effective.</p>
+    </div>
+    <div class="glass rounded-3xl p-6 border-l-4 border-orange-400">
+      <div class="text-2xl mb-2">💡</div>
+      <h3 class="font-black text-gray-800 mb-1">Communication Tip</h3>
+      <p class="text-gray-400 text-sm">Use the AAC board daily. Consistent visual communication builds confidence in non-verbal children.</p>
+    </div>
+    <div class="glass rounded-3xl p-6 border-l-4 border-green-400">
+      <div class="text-2xl mb-2">📞</div>
+      <h3 class="font-black text-gray-800 mb-1">Need Help?</h3>
+      <p class="text-gray-400 text-sm">Our specialists are available for online consultations 7 days a week in your preferred language.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

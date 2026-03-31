@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto fade-in">
+
+  <!-- Header -->
+  <div class="glass rounded-3xl p-6 mb-8 text-center">
+    <div class="text-4xl mb-2">📋</div>
+    <h1 class="text-3xl font-black text-gray-800">Behavioural Questionnaire</h1>
+    <p class="text-gray-400 mt-2">Answer honestly based on your child's typical behaviour over the past 6 months</p>
+    <div class="flex justify-center gap-3 mt-4">
+      <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full">Step 1 of 4</span>
+      <span class="bg-gray-100 text-gray-500 text-xs font-bold px-3 py-1 rounded-full">~5 minutes</span>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="glass rounded-2xl p-4 mb-6">
+    <div class="flex justify-between text-xs font-bold text-gray-400 mb-2">
+      <span>Progress</span>
+      <span id="progress-text">0 / {{ questions|length }}</span>
+    </div>
+    <div class="w-full bg-gray-100 rounded-full h-3">
+      <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-500" style="width:0%"></div>
+    </div>
+  </div>
+
+  <form method="POST" action="/diagnosis/questionnaire/submit" id="qForm">
+    <input type="hidden" name="child_id" value="1"/>
+
+    {% for q in questions %}
+    <div class="glass rounded-3xl p-6 mb-4 card-hover question-card" id="card-{{ q.id }}">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center font-black text-indigo-600 text-sm flex-shrink-0">
+          {{ q.id }}
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full
+              {% if q.category == 'social' %}bg-blue-100 text-blue-600
+              {% elif q.category == 'communication' %}bg-green-100 text-green-600
+              {% elif q.category == 'play' %}bg-yellow-100 text-yellow-600
+              {% elif q.category == 'behavior' %}bg-orange-100 text-orange-600
+              {% else %}bg-pink-100 text-pink-600{% endif %}">
+              {{ q.category|title }}
+            </span>
+          </div>
+          <p class="font-bold text-gray-800 mb-4 text-base">{{ q.q }}</p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {% for label, val in [('Always', 0), ('Sometimes', 1), ('Rarely', 2), ('Never', 3)] %}
+            <label class="option-label cursor-pointer">
+              <input type="radio" name="q_{{ q.id }}" value="{{ val }}" class="hidden option-radio" required/>
+              <div class="option-btn border-2 border-gray-200 rounded-2xl p-3 text-center text-sm font-bold text-gray-500 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                {{ label }}
+              </div>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="glass rounded-3xl p-6 text-center mt-6">
+      <p class="text-gray-400 text-sm mb-4">⚠️ This screening tool is not a medical diagnosis. Always consult a qualified specialist.</p>
+      <button type="submit" id="submitBtn" class="btn-primary px-10 py-4 rounded-2xl font-black text-lg opacity-50 cursor-not-allowed" disabled>
+        Continue to Video Assessment →
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const radios = document.querySelectorAll('.option-radio');
+  const total = {{ questions|length }};
+  let answered = new Set();
+
+  radios.forEach(radio => {
+    radio.addEventListener('change', function() {
+      // Style selected
+      const name = this.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.nextElementSibling.classList.remove('border-indigo-500','bg-indigo-50','text-indigo-700');
+        r.nextElementSibling.classList.add('border-gray-200','text-gray-500');
+      });
+      this.nextElementSibling.classList.add('border-indigo-500','bg-indigo-50','text-indigo-700');
+      this.nextElementSibling.classList.remove('border-gray-200','text-gray-500');
+
+      answered.add(name);
+      const pct = (answered.size / total) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+      document.getElementById('progress-text').textContent = answered.size + ' / ' + total;
+
+      if (answered.size === total) {
+        const btn = document.getElementById('submitBtn');
+        btn.classList.remove('opacity-50','cursor-not-allowed');
+        btn.classList.add('cursor-pointer');
+        btn.disabled = false;
+      }
+    });
+  });
+</script>
+{% endblock %}

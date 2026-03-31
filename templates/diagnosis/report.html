@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-3xl mx-auto fade-in">
+
+  <!-- Disclaimer Banner -->
+  <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-6 flex gap-3">
+    <div class="text-2xl">⚠️</div>
+    <div>
+      <div class="font-black text-amber-800 text-sm">Important Disclaimer</div>
+      <div class="text-amber-700 text-xs mt-1">This AI screening tool is NOT a medical diagnosis. Results must be confirmed by a qualified autism specialist. Please consult a professional before drawing any conclusions.</div>
+    </div>
+  </div>
+
+  <!-- Main Result Card -->
+  {% set level = result.final.confidence_level %}
+  {% set pct = result.final.percentage %}
+  <div class="glass rounded-3xl p-8 mb-6 text-center">
+    <div class="text-5xl mb-4">
+      {% if level == 'High' %}🔴{% elif level == 'Moderate' %}🟡{% else %}🟢{% endif %}
+    </div>
+    <h1 class="text-3xl font-black text-gray-800 mb-2">Screening Complete</h1>
+    <p class="text-gray-400 mb-6">AI Confidence Level of Autism Indicators</p>
+
+    <!-- Big score circle -->
+    <div class="relative w-40 h-40 mx-auto mb-6">
+      <svg class="w-40 h-40 -rotate-90" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#f3f4f6" stroke-width="12"/>
+        <circle cx="60" cy="60" r="50" fill="none"
+          stroke="{% if level == 'High' %}#ef4444{% elif level == 'Moderate' %}#f97316{% else %}#22c55e{% endif %}"
+          stroke-width="12"
+          stroke-dasharray="{{ pct * 3.14 }} 314"
+          stroke-linecap="round"
+          class="transition-all duration-1000"/>
+      </svg>
+      <div class="absolute inset-0 flex flex-col items-center justify-center">
+        <span class="text-3xl font-black text-gray-800">{{ pct }}%</span>
+        <span class="text-xs font-bold {% if level == 'High' %}text-red-500{% elif level == 'Moderate' %}text-orange-500{% else %}text-green-500{% endif %}">{{ level }}</span>
+      </div>
+    </div>
+
+    <div class="{% if level == 'High' %}bg-red-50 border-red-200{% elif level == 'Moderate' %}bg-orange-50 border-orange-200{% else %}bg-green-50 border-green-200{% endif %} border-2 rounded-2xl p-4 text-sm font-semibold {% if level == 'High' %}text-red-700{% elif level == 'Moderate' %}text-orange-700{% else %}text-green-700{% endif %}">
+      {{ result.final.message }}
+    </div>
+  </div>
+
+  <!-- Score Breakdown -->
+  <div class="glass rounded-3xl p-6 mb-6">
+    <h2 class="text-xl font-black text-gray-800 mb-4">Score Breakdown</h2>
+    <div class="space-y-4">
+      <div>
+        <div class="flex justify-between text-sm font-bold mb-1">
+          <span class="text-gray-600">📋 Questionnaire Score (50% weight)</span>
+          <span class="text-indigo-600">{{ (result.q_score * 100)|round(1) }}%</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-2">
+          <div class="bg-indigo-500 h-2 rounded-full" style="width:{{ (result.q_score * 100)|round(1) }}%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm font-bold mb-1">
+          <span class="text-gray-600">📷 Emotion Alignment (30% weight)</span>
+          <span class="text-purple-600">{{ (result.emotion_scores.alignment_score * 100)|round(1) }}%</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-2">
+          <div class="bg-purple-500 h-2 rounded-full" style="width:{{ (result.emotion_scores.alignment_score * 100)|round(1) }}%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm font-bold mb-1">
+          <span class="text-gray-600">🎭 Emotion Variability (20% weight)</span>
+          <span class="text-orange-600">{{ (result.emotion_scores.variability_score * 100)|round(1) }}%</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-2">
+          <div class="bg-orange-500 h-2 rounded-full" style="width:{{ (result.emotion_scores.variability_score * 100)|round(1) }}%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Breakdown -->
+  {% if result.category_scores %}
+  <div class="glass rounded-3xl p-6 mb-6">
+    <h2 class="text-xl font-black text-gray-800 mb-4">Category Analysis</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {% for cat, score in result.category_scores.items() %}
+      <div class="bg-white/60 rounded-2xl p-4 text-center">
+        <div class="text-2xl mb-1">
+          {% if cat == 'social' %}👥
+          {% elif cat == 'communication' %}💬
+          {% elif cat == 'play' %}🎮
+          {% elif cat == 'behavior' %}🔄
+          {% else %}👂{% endif %}
+        </div>
+        <div class="text-xs font-black text-gray-500 uppercase mb-1">{{ cat }}</div>
+        <div class="text-xl font-black {% if score > 0.65 %}text-red-500{% elif score > 0.4 %}text-orange-500{% else %}text-green-500{% endif %}">
+          {{ (score * 100)|round(0)|int }}%
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Emotion Data -->
+  {% if result.emotion_result.emotion_counts %}
+  <div class="glass rounded-3xl p-6 mb-6">
+    <h2 class="text-xl font-black text-gray-800 mb-4">Detected Emotions During Video</h2>
+    <div class="grid grid-cols-4 gap-3">
+      {% for emotion, count in result.emotion_result.emotion_counts.items() %}
+      {% if count > 0 %}
+      <div class="bg-white/60 rounded-2xl p-3 text-center">
+        <div class="text-xl">
+          {% if emotion == 'happy' %}😊
+          {% elif emotion == 'sad' %}😢
+          {% elif emotion == 'surprise' %}😮
+          {% elif emotion == 'angry' %}😠
+          {% elif emotion == 'fear' %}😨
+          {% elif emotion == 'disgust' %}🤢
+          {% else %}😐{% endif %}
+        </div>
+        <div class="text-xs font-black text-gray-500 mt-1">{{ emotion|title }}</div>
+        <div class="text-sm font-black text-indigo-600">{{ count }}x</div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Next Steps -->
+  <div class="glass rounded-3xl p-6 mb-6">
+    <h2 class="text-xl font-black text-gray-800 mb-4">Recommended Next Steps</h2>
+    <div class="space-y-3">
+      <div class="flex items-center gap-3 p-3 bg-indigo-50 rounded-2xl">
+        <div class="text-xl">👨‍⚕️</div>
+        <div>
+          <div class="font-black text-gray-800 text-sm">Consult a Specialist</div>
+          <div class="text-gray-500 text-xs">Book an appointment with a certified autism specialist to confirm findings</div>
+        </div>
+        <a href="/consultation/doctors" class="btn-primary px-4 py-2 rounded-xl text-xs font-bold ml-auto flex-shrink-0">Book Now</a>
+      </div>
+      <div class="flex items-center gap-3 p-3 bg-orange-50 rounded-2xl">
+        <div class="text-xl">💬</div>
+        <div>
+          <div class="font-black text-gray-800 text-sm">Use the AAC Board</div>
+          <div class="text-gray-500 text-xs">Help your child communicate using our interactive board</div>
+        </div>
+        <a href="/communication/board" class="btn-secondary px-4 py-2 rounded-xl text-xs font-bold ml-auto flex-shrink-0">Open</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex gap-4">
+    <button onclick="window.print()" class="flex-1 py-3 rounded-2xl border-2 border-gray-200 font-bold text-gray-600 hover:bg-gray-50 transition-all">
+      🖨️ Print Report
+    </button>
+    <a href="/dashboard/home" class="flex-1 py-3 rounded-2xl btn-primary font-bold text-center">
+      Go to Dashboard →
+    </a>
+  </div>
+
+</div>
+{% endblock %}

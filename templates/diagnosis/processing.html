@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-lg mx-auto text-center fade-in">
+  <div class="glass rounded-3xl p-12">
+    <div class="text-6xl mb-6 float">🧠</div>
+    <h1 class="text-3xl font-black text-gray-800 mb-3">Analysing Results</h1>
+    <p class="text-gray-400 mb-8">Our AI is processing the facial emotion data and combining it with the questionnaire responses.</p>
+
+    <!-- Animated steps -->
+    <div class="space-y-3 text-left mb-8">
+      <div class="flex items-center gap-3 step-item" id="step1">
+        <div class="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center">⏳</div>
+        <span class="font-semibold text-gray-600 text-sm">Processing questionnaire scores...</span>
+      </div>
+      <div class="flex items-center gap-3 step-item opacity-30" id="step2">
+        <div class="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center">⏳</div>
+        <span class="font-semibold text-gray-600 text-sm">Extracting facial emotion frames...</span>
+      </div>
+      <div class="flex items-center gap-3 step-item opacity-30" id="step3">
+        <div class="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center">⏳</div>
+        <span class="font-semibold text-gray-600 text-sm">Running DeepFace emotion analysis...</span>
+      </div>
+      <div class="flex items-center gap-3 step-item opacity-30" id="step4">
+        <div class="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center">⏳</div>
+        <span class="font-semibold text-gray-600 text-sm">Calculating confidence score...</span>
+      </div>
+    </div>
+
+    <div class="w-full bg-gray-100 rounded-full h-3">
+      <div id="analysisBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-1000" style="width:0%"></div>
+    </div>
+    <div class="text-sm text-gray-400 mt-3 font-semibold" id="pctText">0%</div>
+  </div>
+
+  <div class="mt-6 glass rounded-2xl p-4">
+    <p class="text-xs text-gray-400 font-semibold">🔒 All data is processed locally and securely. Video is not stored permanently.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const jobId = "{{ job_id }}";
+const steps = ['step1','step2','step3','step4'];
+const stepTimes = [1000, 3000, 6000, 9000];
+let currentStep = 0;
+
+function activateStep(i) {
+  if(i > 0) {
+    document.getElementById(steps[i-1]).querySelector('div').textContent = '✅';
+  }
+  document.getElementById(steps[i]).classList.remove('opacity-30');
+  document.getElementById(steps[i]).querySelector('div').textContent = '⚙️';
+}
+
+stepTimes.forEach((t, i) => {
+  setTimeout(() => activateStep(i), t);
+});
+
+// Animate bar
+let pct = 0;
+const barInterval = setInterval(() => {
+  pct = Math.min(pct + 1, 95);
+  document.getElementById('analysisBar').style.width = pct + '%';
+  document.getElementById('pctText').textContent = pct + '%';
+}, 120);
+
+// Poll for job completion
+function pollJob() {
+  fetch(`/diagnosis/job-status/${jobId}`)
+    .then(r => r.json())
+    .then(data => {
+      if(data.status === 'complete' || data.status === 'not_found') {
+        clearInterval(barInterval);
+        document.getElementById('analysisBar').style.width = '100%';
+        document.getElementById('pctText').textContent = '100%';
+        steps.forEach(s => {
+          document.getElementById(s).classList.remove('opacity-30');
+          document.getElementById(s).querySelector('div').textContent = '✅';
+        });
+        setTimeout(() => {
+          window.location.href = `/diagnosis/report?job_id=${jobId}`;
+        }, 1000);
+      } else if(data.status === 'error') {
+        window.location.href = `/diagnosis/report?job_id=${jobId}`;
+      } else {
+        setTimeout(pollJob, 2000);
+      }
+    })
+    .catch(() => {
+      setTimeout(() => {
+        window.location.href = `/diagnosis/report?job_id=${jobId}`;
+      }, 12000);
+    });
+}
+
+setTimeout(pollJob, 3000);
+</script>
+{% endblock %}

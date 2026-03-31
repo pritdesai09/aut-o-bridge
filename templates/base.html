@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aut-o-Bridge</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { font-family: 'Nunito', sans-serif; }
+    .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.5); }
+    .gradient-bg { background: linear-gradient(135deg, #f0f9ff 0%, #fef3f2 50%, #f0fdf4 100%); }
+    .nav-link { transition: all 0.2s ease; }
+    .nav-link:hover { transform: translateY(-1px); }
+    .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; transition: all 0.3s ease; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99,102,241,0.4); }
+    .btn-secondary { background: linear-gradient(135deg, #f97316, #fb923c); color: white; transition: all 0.3s ease; }
+    .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(249,115,22,0.4); }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .float { animation: float 3s ease-in-out infinite; }
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .fade-in { animation: fadeInUp 0.6s ease forwards; }
+  </style>
+</head>
+<body class="gradient-bg min-h-screen">
+
+  <!-- Navbar -->
+  <nav class="glass sticky top-0 z-50 px-6 py-3 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black text-lg">A</div>
+        <span class="font-black text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Aut-o-Bridge</span>
+      </a>
+      <div class="hidden md:flex items-center gap-6">
+        <a href="/dashboard/home" class="nav-link text-gray-600 hover:text-indigo-600 font-semibold text-sm">Dashboard</a>
+        <a href="/diagnosis/questionnaire" class="nav-link text-gray-600 hover:text-indigo-600 font-semibold text-sm">Diagnose</a>
+        <a href="/communication/board" class="nav-link text-gray-600 hover:text-indigo-600 font-semibold text-sm">Communicate</a>
+        <a href="/consultation/doctors" class="nav-link text-gray-600 hover:text-indigo-600 font-semibold text-sm">Consult</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <select onchange="changeLang(this.value)" class="text-sm border border-gray-200 rounded-lg px-2 py-1 bg-white/80 font-semibold text-gray-600">
+          <option value="en">🇬🇧 EN</option>
+          <option value="hi">🇮🇳 HI</option>
+          <option value="mr">🟠 MR</option>
+        </select>
+        <a href="/auth/logout" class="btn-primary px-4 py-2 rounded-xl text-sm font-bold">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    function changeLang(lang) {
+      document.cookie = `lang=${lang};path=/`;
+      location.reload();
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

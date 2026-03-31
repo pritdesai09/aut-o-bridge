@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto fade-in">
+  <div class="glass rounded-3xl p-8 shadow-xl">
+    <div class="text-center mb-8">
+      <div class="text-5xl mb-3">👶</div>
+      <h1 class="text-3xl font-black text-gray-800">Add Your Child</h1>
+      <p class="text-gray-400 mt-1">Tell us about your child to personalise care</p>
+    </div>
+    <form method="POST" action="/auth/child-profile" enctype="multipart/form-data" class="space-y-4">
+      <div>
+        <label class="text-sm font-bold text-gray-600 block mb-1">Child's Full Name</label>
+        <input type="text" name="full_name" required placeholder="Child's name"
+          class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white/80"/>
+      </div>
+      <div>
+        <label class="text-sm font-bold text-gray-600 block mb-1">Date of Birth</label>
+        <input type="date" name="date_of_birth" required
+          class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white/80"/>
+      </div>
+      <div>
+        <label class="text-sm font-bold text-gray-600 block mb-1">Gender</label>
+        <select name="gender" class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white/80 font-semibold">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other / Prefer not to say</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-sm font-bold text-gray-600 block mb-1">Photo (optional)</label>
+        <input type="file" name="photo" accept="image/*"
+          class="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white/80"/>
+      </div>
+      <button type="submit" class="btn-primary w-full py-3 rounded-2xl font-black text-lg mt-2">Save & Continue →</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
