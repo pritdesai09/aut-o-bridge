@@ -1,7 +1,6 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 import os
@@ -9,12 +8,18 @@ import os
 from config import settings
 from models import Base
 
-app = FastAPI(title="Aut-o-Bridge", version="1.0.0")
+app = FastAPI(title="Aut-o-Bridge API", version="2.0.0")
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+# CORS — allow React dev server
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173","http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-engine = create_async_engine(settings.DATABASE_URL, echo=True)
+engine = create_async_engine(settings.DATABASE_URL, echo=False)
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 @app.on_event("startup")
@@ -23,14 +28,15 @@ async def startup():
         await conn.run_sync(Base.metadata.create_all)
     os.makedirs("static/uploads/photos", exist_ok=True)
 
-from routes import auth, diagnosis, consultation, communication, dashboard
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 
+from routes import auth, diagnosis, consultation, dashboard
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(diagnosis.router, prefix="/diagnosis", tags=["Diagnosis"])
 app.include_router(consultation.router, prefix="/consultation", tags=["Consultation"])
-app.include_router(communication.router, prefix="/communication", tags=["Communication"])
 app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
 
-@app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
-    return templates.TemplateResponse(request, "landing.html")
+@app.get("/health")
+def health():
+    return {"status": "ok", "app": "Aut-o-Bridge"}
