@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+sqlalchemy
+aiosqlite
+databases
+deepface
+fer
+opencv-python
+numpy
+Pillow
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+aiofiles
