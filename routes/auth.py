@@ -12,7 +12,7 @@ from config import settings
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=12, bcrypt__ident="2b")
 
 def create_token(data: dict):
     to_encode = data.copy()
@@ -72,10 +72,11 @@ async def register(
     email: str = Form(...),
     phone: str = Form(...),
     password: str = Form(...),
-    language: str = Form("en"),
 ):
     from app import AsyncSessionLocal
     try:
+        # Truncate password to 72 bytes max for bcrypt
+        password_bytes = password.encode("utf-8")[:72].decode("utf-8", errors="ignore")
         async with AsyncSessionLocal() as db:
             result = await db.execute(select(User).where(User.email == email))
             if result.scalar_one_or_none():
@@ -84,7 +85,8 @@ async def register(
                 })
             user = User(
                 full_name=full_name, email=email, phone=phone,
-                hashed_password=pwd_context.hash(password), language=language
+                hashed_password=pwd_context.hash(password_bytes),
+                language="en"
             )
             db.add(user)
             await db.commit()
@@ -92,7 +94,7 @@ async def register(
             token = create_token({"sub": email})
             response = RedirectResponse("/auth/child-profile", status_code=302)
             response.set_cookie("access_token", token, httponly=True, samesite="lax")
-            response.set_cookie("lang", language, samesite="lax")
+            response.set_cookie("lang", "en", samesite="lax")
             return response
     except Exception as e:
         return templates.TemplateResponse(request, "auth/register.html", {
@@ -107,10 +109,11 @@ async def login(
 ):
     from app import AsyncSessionLocal
     try:
+        password_bytes = password.encode("utf-8")[:72].decode("utf-8", errors="ignore")
         async with AsyncSessionLocal() as db:
             result = await db.execute(select(User).where(User.email == email))
             user = result.scalar_one_or_none()
-            if not user or not pwd_context.verify(password, user.hashed_password):
+            if not user or not pwd_context.verify(password_bytes, user.hashed_password):
                 return templates.TemplateResponse(request, "auth/login.html", {
                     "error": "Invalid email or password."
                 })

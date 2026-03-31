@@ -9,130 +9,176 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     *{font-family:'Nunito',sans-serif}
-    :root{
-      --bg: #f0f9ff; --bg2: #fef3f2; --bg3: #f0fdf4;
-      --tile-bg: rgba(255,255,255,0.85);
-      --tile-border: rgba(255,255,255,0.9);
-      --accent: #6366f1; --accent2: #f97316;
-      --text: #1e293b; --subtext: #64748b;
+    :root{--bg:#dbeafe;--bg2:#ede9fe;--bg3:#dbeafe;--accent:#6366f1;--accent-light:rgba(99,102,241,0.1);--tile-bg:rgba(255,255,255,0.9);--text:#1e293b;--subtext:#64748b}
+    .theme-calm{--bg:#dbeafe;--bg2:#ede9fe;--bg3:#dbeafe;--accent:#3b82f6;--accent-light:rgba(59,130,246,0.1)}
+    .theme-happy{--bg:#fef9c3;--bg2:#fef3c7;--bg3:#fefce8;--accent:#f59e0b;--accent-light:rgba(245,158,11,0.1);--tile-bg:rgba(255,253,235,0.95)}
+    .theme-energetic{--bg:#ffedd5;--bg2:#fee2e2;--bg3:#fef9c3;--accent:#f97316;--accent-light:rgba(249,115,22,0.1);--tile-bg:rgba(255,247,237,0.95)}
+    .theme-sleepy{--bg:#ede9fe;--bg2:#fae8ff;--bg3:#f3e8ff;--accent:#8b5cf6;--accent-light:rgba(139,92,246,0.1);--tile-bg:rgba(245,243,255,0.95)}
+    .theme-nature{--bg:#dcfce7;--bg2:#d1fae5;--bg3:#ecfdf5;--accent:#22c55e;--accent-light:rgba(34,197,94,0.1);--tile-bg:rgba(240,253,244,0.95)}
+    .theme-neutral{--bg:#f1f5f9;--bg2:#e2e8f0;--bg3:#f8fafc;--accent:#64748b;--accent-light:rgba(100,116,139,0.1);--tile-bg:rgba(248,250,252,0.95)}
+    body{background:linear-gradient(135deg,var(--bg),var(--bg2),var(--bg3));min-height:100vh;transition:background 0.5s ease}
+    .glass{background:rgba(255,255,255,0.75);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.7)}
+    .tile{
+      background:var(--tile-bg);
+      border:2px solid rgba(255,255,255,0.8);
+      border-radius:18px;
+      cursor:pointer;
+      transition:all 0.18s ease;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
     }
-    .theme-calm{--bg:#dbeafe;--bg2:#ede9fe;--bg3:#dbeafe;--accent:#3b82f6;--tile-bg:rgba(239,246,255,0.9)}
-    .theme-happy{--bg:#fef9c3;--bg2:#fef3c7;--bg3:#fefce8;--accent:#f59e0b;--tile-bg:rgba(255,253,235,0.9)}
-    .theme-energetic{--bg:#ffedd5;--bg2:#fee2e2;--bg3:#fef9c3;--accent:#f97316;--tile-bg:rgba(255,247,237,0.9)}
-    .theme-sleepy{--bg:#ede9fe;--bg2:#fae8ff;--bg3:#f3e8ff;--accent:#8b5cf6;--tile-bg:rgba(245,243,255,0.9)}
-    .theme-nature{--bg:#dcfce7;--bg2:#d1fae5;--bg3:#ecfdf5;--accent:#22c55e;--tile-bg:rgba(240,253,244,0.9)}
-    .theme-neutral{--bg:#f1f5f9;--bg2:#e2e8f0;--bg3:#f8fafc;--accent:#64748b;--tile-bg:rgba(248,250,252,0.9)}
-    body{background:linear-gradient(135deg,var(--bg),var(--bg2),var(--bg3));min-height:100vh;transition:all 0.5s ease}
-    .glass{background:rgba(255,255,255,0.7);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.6)}
-    .tile{background:var(--tile-bg);border:2px solid var(--tile-border);border-radius:20px;cursor:pointer;transition:all 0.2s ease;user-select:none;-webkit-tap-highlight-color:transparent}
-    .tile:hover{transform:scale(1.06);box-shadow:0 12px 30px rgba(0,0,0,0.12);border-color:var(--accent)}
-    .tile:active{transform:scale(0.96)}
-    .tile.speaking{border-color:var(--accent);background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(139,92,246,0.1));animation:pulse 0.4s ease}
-    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-    .cat-btn{border-radius:16px;transition:all 0.2s ease;cursor:pointer;border:2px solid transparent}
-    .cat-btn.active{background:var(--accent);color:white;border-color:var(--accent)}
-    .sentence-tile{background:var(--tile-bg);border:2px solid var(--accent);border-radius:14px;padding:6px 12px;font-weight:800;color:var(--accent);font-size:0.85rem;cursor:pointer;transition:all 0.2s}
-    .sentence-tile:hover{background:var(--accent);color:white}
-    .theme-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.2s}
-    .theme-dot.active{border-color:white;transform:scale(1.2);box-shadow:0 0 0 2px var(--accent)}
+    .tile:hover{transform:scale(1.07);box-shadow:0 10px 28px rgba(0,0,0,0.13);border-color:var(--accent)}
+    .tile:active{transform:scale(0.95)}
+    .tile.speaking{
+      border-color:var(--accent);
+      background:var(--accent-light);
+      box-shadow:0 0 0 3px var(--accent-light);
+    }
+    .cat-btn{
+      border-radius:14px;transition:all 0.2s ease;
+      cursor:pointer;border:2px solid transparent;
+      white-space:nowrap;font-weight:800;font-size:0.8rem;
+      padding:8px 16px;
+      background:rgba(255,255,255,0.6);
+      color:var(--subtext);
+    }
+    .cat-btn:hover{border-color:var(--accent);color:var(--accent)}
+    .cat-btn.active{background:var(--accent);color:white;border-color:var(--accent);box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+    .sentence-chip{
+      display:inline-flex;align-items:center;gap:6px;
+      background:var(--accent-light);
+      border:2px solid var(--accent);
+      border-radius:12px;padding:5px 12px;
+      font-weight:800;color:var(--accent);
+      font-size:0.82rem;cursor:pointer;
+      transition:all 0.2s;
+    }
+    .sentence-chip:hover{background:var(--accent);color:white}
+    .theme-dot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.2s;flex-shrink:0}
+    .theme-dot.active{border-color:white;transform:scale(1.25);box-shadow:0 0 0 2px var(--accent)}
+    .lang-btn{padding:4px 12px;border-radius:10px;font-size:0.78rem;font-weight:800;border:2px solid transparent;background:rgba(255,255,255,0.6);color:var(--subtext);cursor:pointer;transition:all 0.2s}
+    .lang-btn.active{background:var(--accent);color:white;border-color:var(--accent)}
+    ::-webkit-scrollbar{height:4px;width:4px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
   </style>
 </head>
-<body id="appBody">
+<body id="appBody" class="theme-calm">
 
 <!-- Top Bar -->
-<div class="glass sticky top-0 z-50 px-4 py-3 shadow-sm">
-  <div class="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-3">
-    <div class="flex items-center gap-2">
-      <a href="/" class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-lg shadow" style="background:var(--accent)">A</a>
-      <span class="font-black text-xl" style="color:var(--accent)">AAC Board</span>
-      <span class="text-xs font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-1">Free</span>
-    </div>
+<div class="glass sticky top-0 z-50 px-4 py-3 shadow-md">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex items-center justify-between flex-wrap gap-3">
+      <!-- Logo -->
+      <div class="flex items-center gap-2">
+        <a href="/" class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md" style="background:var(--accent)">A</a>
+        <div>
+          <span class="font-black text-lg leading-none" style="color:var(--accent)">AAC Board</span>
+          <div class="flex items-center gap-1">
+            <span class="text-xs font-bold bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Free</span>
+            <span class="text-xs text-gray-400 font-semibold">No login needed</span>
+          </div>
+        </div>
+      </div>
 
-    <!-- Language -->
-    <div class="flex items-center gap-2">
-      <span class="text-xs font-bold text-gray-400">LANG</span>
-      <div class="flex gap-1">
-        <button onclick="setLang('en')" id="btn-en" class="px-3 py-1 rounded-lg text-xs font-black border-2 border-gray-200 hover:border-indigo-400 transition-all">EN</button>
-        <button onclick="setLang('hi')" id="btn-hi" class="px-3 py-1 rounded-lg text-xs font-black border-2 border-gray-200 hover:border-indigo-400 transition-all">HI</button>
-        <button onclick="setLang('mr')" id="btn-mr" class="px-3 py-1 rounded-lg text-xs font-black border-2 border-gray-200 hover:border-indigo-400 transition-all">MR</button>
+      <!-- Language -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-black text-gray-400 uppercase tracking-wide">Language</span>
+        <div class="flex gap-1">
+          <button onclick="setLang('en')" id="btn-en" class="lang-btn active">EN</button>
+          <button onclick="setLang('hi')" id="btn-hi" class="lang-btn">HI</button>
+          <button onclick="setLang('mr')" id="btn-mr" class="lang-btn">MR</button>
+        </div>
       </div>
-    </div>
 
-    <!-- Theme Picker -->
-    <div class="flex items-center gap-2">
-      <span class="text-xs font-bold text-gray-400">MOOD</span>
-      <div class="flex gap-1.5">
-        <div class="theme-dot active" style="background:#3b82f6" onclick="setTheme('calm',this)" title="Calm"></div>
-        <div class="theme-dot" style="background:#f59e0b" onclick="setTheme('happy',this)" title="Happy"></div>
-        <div class="theme-dot" style="background:#f97316" onclick="setTheme('energetic',this)" title="Energetic"></div>
-        <div class="theme-dot" style="background:#8b5cf6" onclick="setTheme('sleepy',this)" title="Sleepy"></div>
-        <div class="theme-dot" style="background:#22c55e" onclick="setTheme('nature',this)" title="Nature"></div>
-        <div class="theme-dot" style="background:#94a3b8" onclick="setTheme('neutral',this)" title="Neutral"></div>
+      <!-- Mood Theme -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-black text-gray-400 uppercase tracking-wide">Mood</span>
+        <div class="flex gap-1.5 items-center">
+          <div class="theme-dot active" style="background:#3b82f6" onclick="setTheme('calm',this)" title="Calm 💙"></div>
+          <div class="theme-dot" style="background:#f59e0b" onclick="setTheme('happy',this)" title="Happy 💛"></div>
+          <div class="theme-dot" style="background:#f97316" onclick="setTheme('energetic',this)" title="Energetic 🧡"></div>
+          <div class="theme-dot" style="background:#8b5cf6" onclick="setTheme('sleepy',this)" title="Sleepy 💜"></div>
+          <div class="theme-dot" style="background:#22c55e" onclick="setTheme('nature',this)" title="Nature 💚"></div>
+          <div class="theme-dot" style="background:#94a3b8" onclick="setTheme('neutral',this)" title="Neutral 🩶"></div>
+        </div>
       </div>
-    </div>
 
-    <!-- Volume & Speed -->
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-1">
-        <i data-lucide="volume-2" class="w-4 h-4 text-gray-400"></i>
-        <input type="range" id="volSlider" min="0" max="1" step="0.1" value="1" class="w-16 accent-indigo-500"/>
+      <!-- Volume + Speed -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="volume-2" class="w-4 h-4" style="color:var(--subtext)"></i>
+          <input type="range" id="volSlider" min="0" max="1" step="0.1" value="1"
+            class="w-20 h-1.5 rounded-full appearance-none cursor-pointer" style="accent-color:var(--accent)"/>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="gauge" class="w-4 h-4" style="color:var(--subtext)"></i>
+          <input type="range" id="speedSlider" min="0.5" max="1.5" step="0.1" value="0.9"
+            class="w-20 h-1.5 rounded-full appearance-none cursor-pointer" style="accent-color:var(--accent)"/>
+        </div>
+        <a href="/auth/login" class="text-xs font-black px-3 py-1.5 rounded-xl text-white flex items-center gap-1 shadow" style="background:var(--accent)">
+          <i data-lucide="log-in" class="w-3 h-3"></i> Sign In
+        </a>
       </div>
-      <div class="flex items-center gap-1">
-        <i data-lucide="gauge" class="w-4 h-4 text-gray-400"></i>
-        <input type="range" id="speedSlider" min="0.5" max="1.5" step="0.1" value="1" class="w-16 accent-indigo-500"/>
-      </div>
-      <a href="/auth/login" class="text-xs font-bold px-3 py-1.5 rounded-xl text-white flex items-center gap-1" style="background:var(--accent)">
-        <i data-lucide="log-in" class="w-3 h-3"></i> Sign In
-      </a>
     </div>
   </div>
 </div>
 
-<div class="max-w-6xl mx-auto px-4 py-4">
+<div class="max-w-7xl mx-auto px-4 py-4">
 
   <!-- Sentence Builder -->
-  <div class="glass rounded-2xl p-4 mb-4">
-    <div class="flex items-center gap-2 mb-2">
-      <i data-lucide="message-square-text" class="w-5 h-5" style="color:var(--accent)"></i>
+  <div class="glass rounded-2xl p-4 mb-4 shadow-sm">
+    <div class="flex items-center gap-2 mb-3">
+      <i data-lucide="message-square-text" class="w-5 h-5 flex-shrink-0" style="color:var(--accent)"></i>
       <span class="font-black text-sm" style="color:var(--text)">Sentence Builder</span>
-      <span class="text-xs text-gray-400 font-semibold">(tap tiles to add words)</span>
+      <span class="text-xs font-semibold text-gray-400">— tap tiles to add words</span>
     </div>
-    <div id="sentenceStrip" class="flex flex-wrap gap-2 min-h-10 mb-3">
-      <span class="text-gray-300 text-sm font-semibold" id="emptyMsg">Tap tiles below to build a sentence...</span>
+    <!-- Sentence chips area -->
+    <div id="sentenceStrip" class="flex flex-wrap gap-2 min-h-10 mb-3 items-center">
+      <span class="text-gray-300 text-sm font-semibold italic" id="emptyMsg">Tap tiles below to build a sentence...</span>
     </div>
-    <div class="flex gap-2">
-      <button onclick="speakSentence()" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-white font-black text-sm transition-all" style="background:var(--accent)">
+    <!-- Controls -->
+    <div class="flex flex-wrap gap-2">
+      <button onclick="speakSentence()" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-white font-black text-sm shadow" style="background:var(--accent)">
         <i data-lucide="volume-2" class="w-4 h-4"></i> Speak All
       </button>
-      <button onclick="undoLast()" class="flex items-center gap-1.5 px-4 py-2 rounded-xl font-black text-sm border-2 border-gray-200 hover:bg-gray-50 transition-all" style="color:var(--subtext)">
+      <button onclick="undoLast()" class="flex items-center gap-1.5 px-4 py-2 rounded-xl font-black text-sm border-2 hover:bg-white/60 transition-all" style="border-color:var(--accent);color:var(--accent)">
         <i data-lucide="undo-2" class="w-4 h-4"></i> Undo
       </button>
-      <button onclick="clearSentence()" class="flex items-center gap-1.5 px-4 py-2 rounded-xl font-black text-sm border-2 border-red-200 text-red-400 hover:bg-red-50 transition-all">
+      <button onclick="clearSentence()" class="flex items-center gap-1.5 px-4 py-2 rounded-xl font-black text-sm border-2 border-red-300 text-red-400 hover:bg-red-50 transition-all">
         <i data-lucide="trash-2" class="w-4 h-4"></i> Clear
       </button>
+      <div id="speakingIndicator" class="hidden items-center gap-1.5 px-3 py-2 rounded-xl bg-green-100 text-green-700 font-black text-xs">
+        <i data-lucide="waves" class="w-4 h-4"></i> Speaking...
+      </div>
     </div>
   </div>
 
   <!-- Category Tabs -->
-  <div class="flex gap-2 mb-4 overflow-x-auto pb-1 scrollbar-hide">
+  <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
     {% for cat in board_data.categories %}
     <button onclick="showCategory('{{ cat.id }}')"
       id="cat-{{ cat.id }}"
-      class="cat-btn {% if loop.first %}active{% endif %} px-4 py-2 font-black text-sm whitespace-nowrap flex items-center gap-2 glass">
-      <span>{{ cat.label.en }}</span>
+      class="cat-btn {% if loop.first %}active{% endif %}">
+      {{ cat.label.en }}
     </button>
     {% endfor %}
   </div>
 
-  <!-- Tile Grids -->
+  <!-- Tile Grids — one per category -->
   {% for cat in board_data.categories %}
   <div id="grid-{{ cat.id }}" class="{% if not loop.first %}hidden{% endif %}">
-    <div class="grid grid-cols-4 md:grid-cols-8 gap-3">
+    <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
       {% for tile in cat.tiles %}
-      <div class="tile p-3 flex flex-col items-center justify-center gap-2 min-h-24"
-        onclick="tileClick(this, '{{ tile.label.en }}', '{{ tile.label.hi }}', '{{ tile.label.mr }}', '{{ tile.icon }}')">
-        <span class="text-4xl leading-none">{{ tile.icon }}</span>
-        <span class="font-black text-xs text-center leading-tight tile-label" style="color:var(--text)">{{ tile.label.en }}</span>
+      <div class="tile p-3 flex flex-col items-center justify-center gap-1.5 min-h-24 text-center"
+        data-en="{{ tile.label.en }}"
+        data-hi="{{ tile.label.hi }}"
+        data-mr="{{ tile.label.mr }}"
+        data-icon="{{ tile.icon }}"
+        onclick="tileClick(this)">
+        <span class="text-3xl leading-none select-none">{{ tile.icon }}</span>
+        <span class="tile-label font-black text-xs leading-tight" style="color:var(--text)">{{ tile.label.en }}</span>
       </div>
       {% endfor %}
     </div>
@@ -145,67 +191,108 @@
   lucide.createIcons();
 
   let currentLang = '{{ lang }}' || 'en';
-  let sentence = [];
+  let sentence = []; // array of {label, icon}
   const volSlider = document.getElementById('volSlider');
   const speedSlider = document.getElementById('speedSlider');
 
-  // ── Language ─────────────────────────────────────────────────────────────
-  const tileData = {};
-  document.querySelectorAll('.tile').forEach((tile, i) => {
-    const en = tile.getAttribute('onclick').match(/'([^']+)'/g);
-    tileData[i] = { en: en[0].replace(/'/g,''), hi: en[1].replace(/'/g,''), mr: en[2].replace(/'/g,'') };
-  });
-
+  // ── Language ───────────────────────────────────────────────────────────────
   function setLang(lang) {
     currentLang = lang;
     document.cookie = `lang=${lang};path=/`;
-    document.querySelectorAll('[id^="btn-"]').forEach(b => {
-      b.classList.toggle('border-indigo-500', b.id === `btn-${lang}`);
-      b.style.color = b.id === `btn-${lang}` ? 'var(--accent)' : '';
+
+    // Update button styles
+    ['en','hi','mr'].forEach(l => {
+      const btn = document.getElementById(`btn-${l}`);
+      btn.classList.toggle('active', l === lang);
     });
+
+    // Update all tile labels
     document.querySelectorAll('.tile').forEach(tile => {
-      const labels = tile.getAttribute('onclick').match(/'([^']+)'/g);
-      if (labels && labels.length >= 3) {
-        const idx = lang === 'en' ? 0 : lang === 'hi' ? 1 : 2;
-        tile.querySelector('.tile-label').textContent = labels[idx].replace(/'/g,'');
-      }
+      const label = tile.dataset[lang] || tile.dataset.en;
+      tile.querySelector('.tile-label').textContent = label;
     });
+
+    // Update category tab labels
+    {% for cat in board_data.categories %}
+    document.getElementById('cat-{{ cat.id }}').textContent =
+      '{{ cat.label.en }}' && lang === 'en' ? '{{ cat.label.en }}' :
+      lang === 'hi' ? '{{ cat.label.hi }}' : '{{ cat.label.mr }}';
+    {% endfor %}
   }
 
-  // ── Theme ─────────────────────────────────────────────────────────────────
+  // ── Theme ──────────────────────────────────────────────────────────────────
   function setTheme(theme, el) {
     document.getElementById('appBody').className = `theme-${theme}`;
     document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
     el.classList.add('active');
+    // Re-init lucide after theme change to keep icons
+    lucide.createIcons();
   }
 
-  // ── Categories ────────────────────────────────────────────────────────────
+  // ── Categories ─────────────────────────────────────────────────────────────
   function showCategory(id) {
     document.querySelectorAll('[id^="grid-"]').forEach(g => g.classList.add('hidden'));
-    document.querySelectorAll('[id^="cat-"]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(`grid-${id}`).classList.remove('hidden');
     document.getElementById(`cat-${id}`).classList.add('active');
   }
 
-  // ── Tile Click ────────────────────────────────────────────────────────────
-  function tileClick(el, en, hi, mr, icon) {
-    const label = currentLang === 'en' ? en : currentLang === 'hi' ? hi : mr;
+  // ── Tile Click ─────────────────────────────────────────────────────────────
+  function tileClick(el) {
+    const label = el.dataset[currentLang] || el.dataset.en;
+    const icon = el.dataset.icon;
+
+    // Visual feedback
     el.classList.add('speaking');
-    setTimeout(() => el.classList.remove('speaking'), 400);
+    setTimeout(() => el.classList.remove('speaking'), 350);
+
+    // Speak
     speak(label);
+
+    // Add to sentence
     addToSentence(label, icon);
   }
 
+  // ── Speech ─────────────────────────────────────────────────────────────────
   function speak(text) {
     window.speechSynthesis.cancel();
     const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = currentLang === 'en' ? 'en-IN' : currentLang === 'hi' ? 'hi-IN' : 'mr-IN';
+
+    // Language codes
+    if (currentLang === 'hi') {
+      utt.lang = 'hi-IN';
+    } else if (currentLang === 'mr') {
+      utt.lang = 'mr-IN';
+      // Fallback: if mr-IN not available, use hi-IN (both Devanagari)
+      utt.onstart = () => {};
+      utt.onerror = () => {
+        const fallback = new SpeechSynthesisUtterance(text);
+        fallback.lang = 'hi-IN';
+        fallback.volume = parseFloat(volSlider.value);
+        fallback.rate = parseFloat(speedSlider.value);
+        window.speechSynthesis.speak(fallback);
+      };
+    } else {
+      utt.lang = 'en-IN';
+    }
+
     utt.volume = parseFloat(volSlider.value);
     utt.rate = parseFloat(speedSlider.value);
+
+    const indicator = document.getElementById('speakingIndicator');
+    utt.onstart = () => {
+      indicator.classList.remove('hidden');
+      indicator.classList.add('flex');
+    };
+    utt.onend = () => {
+      indicator.classList.add('hidden');
+      indicator.classList.remove('flex');
+    };
+
     window.speechSynthesis.speak(utt);
   }
 
-  // ── Sentence Builder ──────────────────────────────────────────────────────
+  // ── Sentence Builder ───────────────────────────────────────────────────────
   function addToSentence(label, icon) {
     sentence.push({ label, icon });
     renderSentence();
@@ -213,30 +300,39 @@
 
   function renderSentence() {
     const strip = document.getElementById('sentenceStrip');
-    const empty = document.getElementById('emptyMsg');
+    const emptyMsg = document.getElementById('emptyMsg');
+
+    // Clear strip
+    strip.innerHTML = '';
+
     if (sentence.length === 0) {
-      strip.innerHTML = '';
-      strip.appendChild(empty);
-      empty.style.display = 'inline';
+      strip.appendChild(emptyMsg);
+      emptyMsg.style.display = 'inline';
       return;
     }
-    empty.style.display = 'none';
-    strip.innerHTML = '';
+
+    emptyMsg.style.display = 'none';
+
     sentence.forEach((item, i) => {
-      const el = document.createElement('div');
-      el.className = 'sentence-tile flex items-center gap-1';
-      el.innerHTML = `<span>${item.icon}</span><span>${item.label}</span>`;
-      el.onclick = () => { sentence.splice(i, 1); renderSentence(); };
-      strip.appendChild(el);
+      const chip = document.createElement('div');
+      chip.className = 'sentence-chip';
+      chip.innerHTML = `<span>${item.icon}</span><span>${item.label}</span><span style="font-size:0.7rem;opacity:0.6" title="Remove">✕</span>`;
+      chip.addEventListener('click', () => {
+        sentence.splice(i, 1);
+        renderSentence();
+      });
+      strip.appendChild(chip);
     });
   }
 
   function speakSentence() {
     if (sentence.length === 0) return;
-    speak(sentence.map(s => s.label).join(' '));
+    const fullText = sentence.map(s => s.label).join(' ');
+    speak(fullText);
   }
 
   function undoLast() {
+    if (sentence.length === 0) return;
     sentence.pop();
     renderSentence();
   }
@@ -246,9 +342,8 @@
     renderSentence();
   }
 
-  // Init
+  // Init language buttons
   setLang(currentLang);
-  document.getElementById(`btn-${currentLang}`)?.classList.add('border-indigo-500');
 </script>
 </body>
 </html>

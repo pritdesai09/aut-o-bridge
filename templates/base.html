@@ -26,7 +26,7 @@
 <body class="gradient-bg min-h-screen">
 <nav class="glass sticky top-0 z-50 px-6 py-3 shadow-sm">
   <div class="max-w-7xl mx-auto flex items-center justify-between">
-    <a href="/" class="flex items-center gap-2">
+    <a href="/dashboard/home" class="flex items-center gap-2">
       <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black text-lg">A</div>
       <span class="font-black text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Aut-o-Bridge</span>
     </a>
@@ -44,16 +44,9 @@
         <i data-lucide="stethoscope" class="w-4 h-4"></i> Consult
       </a>
     </div>
-    <div class="flex items-center gap-3">
-      <select onchange="changeLang(this.value)" class="text-sm border border-gray-200 rounded-lg px-2 py-1 bg-white/80 font-semibold text-gray-600 cursor-pointer">
-        <option value="en">EN</option>
-        <option value="hi">HI</option>
-        <option value="mr">MR</option>
-      </select>
-      <a href="/auth/logout" class="flex items-center gap-1.5 btn-primary px-4 py-2 rounded-xl text-sm font-bold">
-        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
-      </a>
-    </div>
+    <a href="/auth/logout" class="flex items-center gap-1.5 btn-primary px-4 py-2 rounded-xl text-sm font-bold">
+      <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+    </a>
   </div>
 </nav>
 <main class="max-w-7xl mx-auto px-4 py-8">
@@ -61,10 +54,6 @@
 </main>
 <script>
   lucide.createIcons();
-  function changeLang(lang) {
-    document.cookie = `lang=${lang};path=/`;
-    location.reload();
-  }
 </script>
 {% block scripts %}{% endblock %}
 </body>
