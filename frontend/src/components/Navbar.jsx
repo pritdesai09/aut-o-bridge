@@ -15,22 +15,24 @@ export default function Navbar() {
     <nav className="glass sticky top-0 z-50 px-6 py-3 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black text-lg">A</div>
-          <span className="font-black text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Aut-o-Bridge</span>
+          <img src="/logo.png" alt="Aut-o-Bridge" className="h-8 w-auto object-contain" />
+          <span className="font-black text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Aut-o-Bridge
+          </span>
         </Link>
 
         {user && (
-          <div className="hidden md:flex items-center gap-5">
-            <Link to="/dashboard" className="flex items-center gap-1.5 text-gray-600 hover:text-indigo-600 font-semibold text-sm transition-colors">
+          <div className="hidden md:flex items-center gap-6">
+            <Link to="/dashboard" className="flex items-center gap-1.5 text-gray-600 hover:text-indigo-600 font-bold text-base transition-colors">
               <LayoutDashboard className="w-4 h-4" /> Dashboard
             </Link>
-            <Link to="/diagnosis/questionnaire" className="flex items-center gap-1.5 text-gray-600 hover:text-indigo-600 font-semibold text-sm transition-colors">
+            <Link to="/diagnosis/questionnaire" className="flex items-center gap-1.5 text-gray-600 hover:text-indigo-600 font-bold text-base transition-colors">
               <ScanFace className="w-4 h-4" /> Diagnose
             </Link>
-            <Link to="/aac" className="flex items-center gap-1.5 text-gray-600 hover:text-indigo-600 font-semibold text-sm transition-colors">
+            <Link to="/aac" className="flex items-center gap-1.5 text-gray-600 hover:text-indigo-600 font-bold text-base transition-colors">
               <LayoutGrid className="w-4 h-4" /> Communicate
             </Link>
-            <Link to="/doctors" className="flex items-center gap-1.5 text-gray-600 hover:text-indigo-600 font-semibold text-sm transition-colors">
+            <Link to="/doctors" className="flex items-center gap-1.5 text-gray-600 hover:text-indigo-600 font-bold text-base transition-colors">
               <Stethoscope className="w-4 h-4" /> Consult
             </Link>
           </div>

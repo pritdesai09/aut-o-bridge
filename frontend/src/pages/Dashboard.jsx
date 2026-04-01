@@ -3,17 +3,19 @@ import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import api from '../api/axios'
 import { useAuth } from '../context/AuthContext'
-import { ScanFace, LayoutGrid, Stethoscope, ShieldCheck, Plus, Baby, CalendarClock, Video, Building2, CalendarX } from 'lucide-react'
+import { ScanFace, LayoutGrid, Stethoscope, ShieldCheck, Plus, Baby, CalendarClock, Video, Building2, CalendarX, ClipboardList, TrendingUp, AlertTriangle } from 'lucide-react'
 
 export default function Dashboard() {
   const { user } = useAuth()
   const [children, setChildren] = useState([])
   const [appointments, setAppointments] = useState([])
+  const [reports, setReports] = useState([])
 
   useEffect(() => {
     api.get('/dashboard/home').then(r => {
       setChildren(r.data.children || [])
       setAppointments(r.data.appointments || [])
+      setReports(r.data.reports || [])
     })
   }, [])
 
@@ -24,26 +26,16 @@ export default function Dashboard() {
     { to: '/access-control', icon: ShieldCheck, label: 'Access Control', color: 'bg-purple-100', iconColor: 'text-purple-500' },
   ]
 
+  const levelColor = (level) => {
+    if (level === 'High') return 'text-red-600 bg-red-50 border-red-200'
+    if (level === 'Moderate') return 'text-orange-600 bg-orange-50 border-orange-200'
+    return 'text-green-600 bg-green-50 border-green-200'
+  }
+
   return (
     <div className="gradient-bg min-h-screen">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-8 fade-in">
-
-        {/* Header */}
-        <div className="glass rounded-3xl p-6 mb-8 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-200 to-purple-200 flex items-center justify-center">
-              <Baby className="w-7 h-7 text-indigo-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-black text-gray-800">Welcome back, {user?.full_name?.split(' ')[0]}</h1>
-              <p className="text-gray-400 text-sm">{user?.email}</p>
-            </div>
-          </div>
-          <Link to="/child-profile" className="btn-primary px-5 py-3 rounded-2xl font-bold text-sm flex items-center gap-2">
-            <Plus className="w-4 h-4" /> Add Child
-          </Link>
-        </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -57,7 +49,7 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
           {/* Children */}
           <div>
             <h2 className="text-xl font-black text-gray-700 mb-4 flex items-center gap-2">
@@ -106,7 +98,7 @@ export default function Dashboard() {
                   {appt.mode === 'Online' ? <Video className="w-5 h-5 text-green-600" /> : <Building2 className="w-5 h-5 text-green-600" />}
                 </div>
                 <div className="flex-1">
-                  <div className="font-black text-gray-800 text-sm">Dr. {appt.doctor_name || `#${appt.doctor_id}`}</div>
+                  <div className="font-black text-gray-800 text-sm">{appt.doctor_name}</div>
                   <div className="text-xs text-gray-400">{appt.appointment_date} at {appt.appointment_time}</div>
                 </div>
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg ${appt.status === 'upcoming' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
@@ -125,6 +117,74 @@ export default function Dashboard() {
             )}
           </div>
         </div>
+
+        {/* AI Diagnosis History */}
+        <div>
+          <h2 className="text-xl font-black text-gray-700 mb-4 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-indigo-500" /> AI Diagnosis History
+          </h2>
+          {reports.length > 0 ? (
+            <div className="grid md:grid-cols-2 gap-4">
+              {reports.map((report, i) => (
+                <div key={i} className="glass rounded-3xl p-5 card-hover">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <div className="font-black text-gray-800 text-sm">{report.child_name}</div>
+                      <div className="text-xs text-gray-400 mt-0.5">{report.created_at}</div>
+                    </div>
+                    <span className={`text-xs font-black px-3 py-1 rounded-full border ${levelColor(report.confidence_level)}`}>
+                      {report.confidence_level} — {report.percentage}%
+                    </span>
+                  </div>
+
+                  {/* Score bars */}
+                  <div className="space-y-2 mb-3">
+                    {[
+                      { label: 'Questionnaire', val: report.q_score, color: 'bg-indigo-400' },
+                      { label: 'Emotion Alignment', val: report.alignment_score, color: 'bg-purple-400' },
+                      { label: 'Variability', val: report.variability_score, color: 'bg-orange-400' },
+                    ].map(({ label, val, color }) => (
+                      <div key={label}>
+                        <div className="flex justify-between text-xs font-semibold text-gray-500 mb-0.5">
+                          <span>{label}</span><span>{Math.round((val||0)*100)}%</span>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-1.5">
+                          <div className={`${color} h-1.5 rounded-full`} style={{width:`${(val||0)*100}%`}} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Category scores */}
+                  {report.category_scores && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {Object.entries(report.category_scores).map(([cat, score]) => (
+                        <span key={cat} className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${score > 0.65 ? 'bg-red-50 border-red-200 text-red-600' : score > 0.4 ? 'bg-orange-50 border-orange-200 text-orange-600' : 'bg-green-50 border-green-200 text-green-600'}`}>
+                          {cat}: {Math.round(score*100)}%
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mt-3 flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-2">
+                    <AlertTriangle className="w-3 h-3 text-amber-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-amber-700 font-semibold">Not a medical diagnosis. Consult a specialist.</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="glass rounded-3xl p-8 text-center">
+              <ClipboardList className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <h3 className="font-black text-lg text-gray-600 mb-2">No Screenings Yet</h3>
+              <p className="text-gray-400 text-sm mb-4">Complete an AI screening to see results here</p>
+              <Link to="/diagnosis/questionnaire" className="btn-primary px-6 py-2.5 rounded-xl font-bold text-sm inline-flex items-center gap-2">
+                <ScanFace className="w-4 h-4" /> Start Screening
+              </Link>
+            </div>
+          )}
+        </div>
+
       </div>
     </div>
   )

@@ -8,11 +8,10 @@ export default function Landing() {
       <div className="blob w-80 h-80 bg-purple-400 top-40 right-0"></div>
       <div className="blob w-72 h-72 bg-orange-300 bottom-20 left-20"></div>
 
-      {/* Navbar */}
       <nav className="glass sticky top-0 z-50 px-6 py-4 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black text-xl shadow-lg">A</div>
+            <img src="/logo.png" alt="Aut-o-Bridge" className="h-9 w-auto object-contain" />
             <span className="font-black text-2xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Aut-o-Bridge</span>
           </div>
           <div className="flex items-center gap-3">
@@ -27,7 +26,6 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* Hero */}
       <section className="max-w-7xl mx-auto px-6 pt-16 pb-12 relative">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
@@ -66,7 +64,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Features */}
       <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-black text-gray-800 mb-3">Everything Your Family Needs</h2>
@@ -90,7 +87,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
         <div className="glass rounded-3xl p-12 text-center relative overflow-hidden">
           <div className="blob w-64 h-64 bg-indigo-300 -top-20 -left-20"></div>
