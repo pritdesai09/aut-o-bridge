@@ -31,7 +31,7 @@ async def dashboard_home(request: Request):
         ap = await db.execute(select(Appointment).where(Appointment.parent_id == user.id))
         appts_raw = ap.scalars().all()
 
-        # Reports — get all reports for all children
+        # Reports — get latest 5 reports across all children, deduplicated
         child_ids = [c.id for c in children_raw]
         reports = []
         for cid in child_ids:
@@ -39,8 +39,15 @@ async def dashboard_home(request: Request):
                 select(DiagnosticReport)
                 .where(DiagnosticReport.child_id == cid)
                 .order_by(DiagnosticReport.created_at.desc())
+                .limit(3)  # max 3 per child
             )
+            seen_scores = set()
             for r in rp.scalars().all():
+                # Deduplicate by rounding score to 1 decimal
+                score_key = round((r.final_confidence or 0.5), 1)
+                if score_key in seen_scores:
+                    continue
+                seen_scores.add(score_key)
                 try:
                     cat_scores = json.loads(r.category_scores) if r.category_scores else {}
                 except:
