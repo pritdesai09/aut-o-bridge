@@ -194,14 +194,16 @@ export default function AACBoard() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <Link to="/" className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-black text-lg shadow"
-                style={{background: t.accent}}>A</Link>
-              <div>
-                <div className="font-black text-lg leading-none" style={{color: t.accent}}>AAC Board</div>
-                <div className="flex items-center gap-1">
-                  <span className="text-xs font-bold bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Free</span>
-                  <span className="text-xs text-gray-400 font-semibold">No login needed</span>
-                </div>
+              <Link to="/">
+                <img
+                  src="/logo.png"
+                  alt="Aut-o-Bridge"
+                  className="h-20 w-auto object-contain p-0 m-0"
+                  style={{ maxHeight: '80px' }}
+                />
+              </Link>
+              <div className="font-black text-lg leading-none" style={{color: t.accent}}>
+                AAC Board
               </div>
             </div>
 

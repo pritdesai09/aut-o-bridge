@@ -8,11 +8,18 @@ export default function Landing() {
       <div className="blob w-80 h-80 bg-purple-400 top-40 right-0"></div>
       <div className="blob w-72 h-72 bg-orange-300 bottom-20 left-20"></div>
 
-      <nav className="glass sticky top-0 z-50 px-6 py-4 shadow-sm">
+      <nav className="glass sticky top-0 z-50 px-6 py-2 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="Aut-o-Bridge" className="h-9 w-auto object-contain" />
-            <span className="font-black text-2xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Aut-o-Bridge</span>
+            <img
+              src="/logo.png"
+              alt="Aut-o-Bridge"
+              className="h-20 w-auto object-contain p-0 m-0"
+              style={{ maxHeight: '80px' }}
+            />
+            <span className="font-black text-2xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Aut-o-Bridge
+            </span>
           </div>
           <div className="flex items-center gap-3">
             <Link to="/aac" className="px-4 py-2 rounded-xl text-sm font-bold text-orange-600 border-2 border-orange-200 hover:bg-orange-50 transition-all flex items-center gap-1.5">
@@ -74,7 +81,7 @@ export default function Landing() {
             { icon: ScanFace, title: 'AI Screening', desc: 'Behavioural questionnaire + facial emotion analysis for early autism detection', color: 'from-blue-100 to-indigo-100', iconColor: 'text-indigo-500' },
             { icon: Stethoscope, title: 'Expert Consult', desc: 'Connect with certified autism specialists online or in-person', color: 'from-green-100 to-emerald-100', iconColor: 'text-green-500' },
             { icon: LayoutGrid, title: 'AAC Board', desc: 'Interactive communication tool with voice output — free to use, no account needed', color: 'from-orange-100 to-amber-100', iconColor: 'text-orange-500' },
-            { icon: BarChart2, title: 'Care Dashboard', desc: 'Track progress, manage doctor access and monitor your child\'s care journey', color: 'from-purple-100 to-pink-100', iconColor: 'text-purple-500' },
+            { icon: BarChart2, title: 'Care Dashboard', desc: "Track progress, manage doctor access and monitor your child's care journey", color: 'from-purple-100 to-pink-100', iconColor: 'text-purple-500' },
           ].map(({ icon: Icon, title, desc, color, iconColor }) => (
             <div key={title} className="glass rounded-3xl p-6 card-hover text-center">
               <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center`}>
