@@ -12,17 +12,17 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="glass sticky top-0 z-50 px-6 py-2 shadow-sm">
+    <nav className="glass sticky top-0 z-50 px-6 py-0 shadow-sm">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2">
           <img
             src="/logo.png"
-            alt="Aut-o-Bridge"
-            className="h-12 w-auto object-contain"
-            style={{ maxHeight: '48px' }}
+            alt="AUT-O-BRIDGE"
+            className="h-24 w-auto object-contain"
+            style={{ maxHeight: '80px' }}
           />
           <span className="font-black text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Aut-o-Bridge
+            AUT-O-BRIDGE
           </span>
         </Link>
 

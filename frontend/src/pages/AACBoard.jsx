@@ -189,7 +189,7 @@ export default function AACBoard() {
   return (
     <div style={{ background: t.bg, minHeight: '100vh', transition: 'background 0.5s ease' }}>
       {/* Top bar */}
-      <div className="glass sticky top-0 z-50 px-4 py-3 shadow-md">
+      <div className="glass sticky top-0 z-50 px-4 py-0.5 shadow-md">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Logo */}
@@ -197,7 +197,7 @@ export default function AACBoard() {
               <Link to="/">
                 <img
                   src="/logo.png"
-                  alt="Aut-o-Bridge"
+                  alt="AUT-O-BRIDGE"
                   className="h-20 w-auto object-contain p-0 m-0"
                   style={{ maxHeight: '80px' }}
                 />

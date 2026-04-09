@@ -8,7 +8,7 @@ export default function Landing() {
       <div className="blob w-80 h-80 bg-purple-400 top-40 right-0"></div>
       <div className="blob w-72 h-72 bg-orange-300 bottom-20 left-20"></div>
 
-      <nav className="glass sticky top-0 z-50 px-6 py-2 shadow-sm">
+      <nav className="glass sticky top-0 z-50 px-6 py-1 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img
@@ -18,7 +18,7 @@ export default function Landing() {
               style={{ maxHeight: '80px' }}
             />
             <span className="font-black text-2xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Aut-o-Bridge
+              AUT-O-BRIDGE
             </span>
           </div>
           <div className="flex items-center gap-3">

@@ -39,8 +39,8 @@ export default function Login() {
               <img
                 src="/logo.png"
                 alt="Aut-o-Bridge"
-                className="h-20 w-auto object-contain"
-                style={{ maxHeight: '80px' }}
+                className="h-24 w-auto object-contain"
+                style={{ maxHeight: '85px' }}
               />
             </div>
             <h1 className="text-3xl font-black text-gray-800">Welcome Back</h1>
