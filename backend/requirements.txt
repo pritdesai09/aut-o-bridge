@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+aiosqlite
+bcrypt==4.0.1
+python-jose[cryptography]
+python-multipart
+python-dotenv
+aiofiles
+Pillow
+opencv-python-headless
+numpy
+deepface
+tf-keras
+tensorflow
+ffmpeg-python
